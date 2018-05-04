@@ -1,1 +1,0 @@
-../csv_to_static_groups/csv_to_static_groups.py
