@@ -1,0 +1,353 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Tutorial &mdash; csv_to_static_groups 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Script Usage" href="script_usage.html" />
+    <link rel="prev" title="Intallation" href="install.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> csv_to_static_groups
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Intallation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#scenario">Scenario:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#modifying-the-csv-to-the-supported-format">1. Modifying the CSV to the supported format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-the-script">2. Running the script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#automatically-maintaining-the-groups-optional">3. Automatically Maintaining The Groups (Optional)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="script_usage.html">Script Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="supported_csv_format.html">Supported CSV Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_interfaces.html">Developer Interfaces</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">csv_to_static_groups</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Tutorial</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/tutorial.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="tutorial">
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="scenario">
+<h2>Scenario:<a class="headerlink" href="#scenario" title="Permalink to this headline">¶</a></h2>
+<p>We need to create a custom group for each combination of department
+and owner. Unfortunately we do not have hypervisor tagging, so I can’t
+create these groups with several dynamic groups.</p>
+<p>However, we do have an up to date spreadsheet of our virtual machines’ departments
+and owners.</p>
+<div class="section" id="modifying-the-csv-to-the-supported-format">
+<h3>1. Modifying the CSV to the supported format<a class="headerlink" href="#modifying-the-csv-to-the-supported-format" title="Permalink to this headline">¶</a></h3>
+<p>Currently we have this Excel spreadsheet of virtual machines that we need to
+create static groups from:</p>
+<a class="reference internal image-reference" href="_images/tutorial_csv.png"><img alt="_images/tutorial_csv.png" src="_images/tutorial_csv.png" style="width: 353.6px; height: 219.20000000000002px;" /></a>
+<p>We need to modify this spreadsheet to meet the supported CSV format
+requirements.</p>
+<ol class="arabic">
+<li><dl class="first docutils">
+<dt>First we need to add the two required headers.</dt>
+<dd><p class="first">We can change “VMs” to “Entity Name”</p>
+<a class="reference internal image-reference" href="_images/tutorial_name_header.gif"><img alt="_images/tutorial_name_header.gif" src="_images/tutorial_name_header.gif" style="width: 449.6px; height: 232.0px;" /></a>
+<p>then we can add the “Entity Type” column.</p>
+<a class="last reference internal image-reference" href="_images/tutorial_type_header.gif"><img alt="_images/tutorial_type_header.gif" src="_images/tutorial_type_header.gif" style="width: 449.6px; height: 232.0px;" /></a>
+</dd>
+</dl>
+</li>
+<li><p class="first"><strong>Then save our spreadsheet as a CSV.</strong></p>
+</li>
+</ol>
+<p>After that, we’re done!</p>
+</div>
+<div class="section" id="running-the-script">
+<h3>2. Running the script<a class="headerlink" href="#running-the-script" title="Permalink to this headline">¶</a></h3>
+<p>We can then run <em>csv_to_static_groups</em> to create our groups.</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ ./csv_to_static_groups.py vm_departments_owners.csv -u administrator
+</pre></div>
+</div>
+<p>After we have created these groups we also realize we need groups for all VM’s in
+each department without the owner!</p>
+<p>Luckily, we can use the same CSV to create these groups by adding the group_headers
+option and only specify the “Department” column:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ ./csv_to_static_groups.py vm_departments_owners.csv -u administrator --group_headers &quot;Department&quot;
+</pre></div>
+</div>
+</div>
+<div class="section" id="automatically-maintaining-the-groups-optional">
+<h3>3. Automatically Maintaining The Groups (Optional)<a class="headerlink" href="#automatically-maintaining-the-groups-optional" title="Permalink to this headline">¶</a></h3>
+<p>Until we have hypervisor tags, we need to ensure that the groups are corrected
+if entities in these static groups are accidentally added or removed.
+In other words, we need <em>csv_to_static_groups</em> to periodically check and fix
+any discrepancies.</p>
+<ol class="arabic">
+<li><dl class="first docutils">
+<dt>Automatically passing credentials</dt>
+<dd><p class="first">Since this will be running unattended, we need to automatically pass
+credentials to the script. <em>csv_to_static_groups</em> supports passing base64
+encoded credentials as a parameter.</p>
+<p>These can be generated with this command:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ echo -n &quot;username:password&quot; | base64
+</pre></div>
+</div>
+<p>Which gives us this hash:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dXNlcm5hbWU6cGFzc3dvcmQ</span><span class="o">=</span>
+</pre></div>
+</div>
+<p>We can pass these to the script with the encoded_creds option</p>
+<div class="code bash last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">--</span><span class="n">encoded_creds</span> <span class="n">dXNlcm5hbWU6cGFzc3dvcmQ</span><span class="o">=</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Enable Logging</dt>
+<dd><p class="first">We’ll also want a way to save the logs to a file to check on any issues, so we’ll add
+the log option and provide a path to write the logs to.</p>
+<div class="code bash last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">--</span><span class="n">log</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">tomcat</span><span class="o">/</span><span class="n">script</span><span class="o">/</span><span class="n">control</span><span class="o">/</span><span class="n">csv_to_static_groups_log</span><span class="o">.</span><span class="n">log</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Creating a config file</dt>
+<dd><p class="first">We can package these options into a convenient JSON formatted
+config file.</p>
+<p>my_group_config.json:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;encoded_creds&quot;</span><span class="p">:</span> <span class="s2">&quot;dXNlcm5hbWU6cGFzc3dvcmQ=&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;log&quot;</span><span class="p">:</span> <span class="s2">&quot;/srv/tomcat/script/control/csv_to_static_groups_log.log&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;quiet&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>We can create the first set of groups with</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ ./csv_to_static_groups.py vm_departments_owners.csv --config my_group_config.json
+</pre></div>
+</div>
+<p>And the second set with:</p>
+<div class="code bash last highlight-default notranslate"><div class="highlight"><pre><span></span>$ ./csv_to_static_groups.py vm_departments_owners.csv --config my_group_config.json --group_headers &quot;Department&quot;
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Scheduling the script</dt>
+<dd><p class="first">We can schedule this to run in crontab to periodically check and maintain
+the groups.</p>
+<p>Remember to explicitly declare all paths</p>
+<p>In this case everyday at 7am.</p>
+<div class="code bash last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">00</span> <span class="mi">07</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">./</span><span class="n">srv</span><span class="o">/</span><span class="n">tomcat</span><span class="o">/</span><span class="n">script</span><span class="o">/</span><span class="n">control</span><span class="o">/</span><span class="n">csv_to_static_groups</span><span class="o">.</span><span class="n">py</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">tomcat</span><span class="o">/</span><span class="n">script</span><span class="o">/</span><span class="n">control</span><span class="o">/</span><span class="n">vm_departments_owners</span><span class="o">.</span><span class="n">csv</span> <span class="o">--</span><span class="n">config</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">tomcat</span><span class="o">/</span><span class="n">script</span><span class="o">/</span><span class="n">control</span><span class="o">/</span><span class="n">my_group_config</span><span class="o">.</span><span class="n">json</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="script_usage.html" class="btn btn-neutral float-right" title="Script Usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="install.html" class="btn btn-neutral" title="Intallation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Austin Portal.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>

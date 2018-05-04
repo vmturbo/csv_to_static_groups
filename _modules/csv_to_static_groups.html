@@ -1,0 +1,1168 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>csv_to_static_groups &mdash; csv_to_static_groups 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> csv_to_static_groups
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Intallation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../script_usage.html">Script Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supported_csv_format.html">Supported CSV Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_interfaces.html">Developer Interfaces</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">csv_to_static_groups</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>csv_to_static_groups</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for csv_to_static_groups</h1><div class="highlight"><pre>
+<span></span><span class="ch">#! /usr/bin/python3</span>
+<span class="kn">import</span> <span class="nn">vmtconnect</span> <span class="k">as</span> <span class="nn">vconn</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">from</span> <span class="nn">getpass</span> <span class="k">import</span> <span class="n">getpass</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">requests.packages.urllib3.exceptions</span> <span class="k">import</span> <span class="n">InsecureRequestWarning</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">from</span> <span class="nn">logging.handlers</span> <span class="k">import</span> <span class="n">RotatingFileHandler</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">wraps</span>
+
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;1.0.0.dev&quot;</span>
+
+<span class="c1">## ----------------------------------------------------</span>
+<span class="c1">##   Global Variables</span>
+<span class="c1">## ----------------------------------------------------</span>
+
+<span class="c1"># _msg Variables</span>
+<span class="n">LOGGER</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">QUIET</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">TRACE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">WARN</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="c1"># _EventTracker Categories</span>
+<span class="n">TRK_DELETE</span> <span class="o">=</span> <span class="s2">&quot;Deleted&quot;</span>
+<span class="n">TRK_ERROR</span> <span class="o">=</span> <span class="s2">&quot;Errors&quot;</span>
+<span class="n">TRK_MISS_ENTITY</span> <span class="o">=</span> <span class="s2">&quot;Missing Entities&quot;</span>
+<span class="n">TRK_ADD</span> <span class="o">=</span> <span class="s2">&quot;Added&quot;</span>
+<span class="n">TRK_UPDATE</span> <span class="o">=</span> <span class="s2">&quot;Updated&quot;</span>
+<span class="n">TRK_SKIP</span> <span class="o">=</span> <span class="s2">&quot;Skipped&quot;</span>
+
+<span class="c1"># GroupParser Variables</span>
+<span class="n">ENTITY_TYPE_HEADER</span> <span class="o">=</span> <span class="s2">&quot;Entity Type&quot;</span>
+<span class="n">ENTITY_NAME_HEADER</span> <span class="o">=</span> <span class="s2">&quot;Entity Name&quot;</span>
+<span class="n">GROUP_DELIMITER</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span>
+
+<span class="c1">## ----------------------------------------------------</span>
+<span class="c1">##   Error Classes</span>
+<span class="c1">## ----------------------------------------------------</span>
+
+<span class="c1"># CSVGroupParser Exceptions</span>
+<div class="viewcode-block" id="CSVGroupParserError"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.CSVGroupParserError">[docs]</a><span class="k">class</span> <span class="nc">CSVGroupParserError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base CSVGroupParser Exception.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="MissingHeaderError"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.MissingHeaderError">[docs]</a><span class="k">class</span> <span class="nc">MissingHeaderError</span><span class="p">(</span><span class="n">CSVGroupParserError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Raised if a specified header is missing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+<span class="c1"># StaticGroup Exceptions</span>
+<div class="viewcode-block" id="StaticGroupError"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.StaticGroupError">[docs]</a><span class="k">class</span> <span class="nc">StaticGroupError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base StaticGroup Exception.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="GroupAlreadyExistsError"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.GroupAlreadyExistsError">[docs]</a><span class="k">class</span> <span class="nc">GroupAlreadyExistsError</span><span class="p">(</span><span class="n">StaticGroupError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Raised when attempting to add a group that already exists.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="MissingUUIDError"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.MissingUUIDError">[docs]</a><span class="k">class</span> <span class="nc">MissingUUIDError</span><span class="p">(</span><span class="n">StaticGroupError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base StaticGroup Missing UUID Exception.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="NoMatchingGroupError"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.NoMatchingGroupError">[docs]</a><span class="k">class</span> <span class="nc">NoMatchingGroupError</span><span class="p">(</span><span class="n">MissingUUIDError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Raised when attempting to update/remove a group that does not exist.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="DuplicateMatchingGroupError"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.DuplicateMatchingGroupError">[docs]</a><span class="k">class</span> <span class="nc">DuplicateMatchingGroupError</span><span class="p">(</span><span class="n">MissingUUIDError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Raised when attempting to update/remove a group where mutliple groups</span>
+<span class="sd">    share the same name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="LookupNameError"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.LookupNameError">[docs]</a><span class="k">class</span> <span class="nc">LookupNameError</span><span class="p">(</span><span class="n">StaticGroupError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base StaticGroup Lookup Name Exception.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="NameMatchError"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.NameMatchError">[docs]</a><span class="k">class</span> <span class="nc">NameMatchError</span><span class="p">(</span><span class="n">LookupNameError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Raised if an entity can&#39;t be found by name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="MultipleMatchingNamesError"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.MultipleMatchingNamesError">[docs]</a><span class="k">class</span> <span class="nc">MultipleMatchingNamesError</span><span class="p">(</span><span class="n">LookupNameError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Raised if an entity name is found more than once in the target server.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+<span class="c1">## ----------------------------------------------------</span>
+<span class="c1">##   Classes</span>
+<span class="c1">## ----------------------------------------------------</span>
+
+<div class="viewcode-block" id="GroupUpdateUtility"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.GroupUpdateUtility">[docs]</a><span class="k">class</span> <span class="nc">GroupUpdateUtility</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility Object to simplify common group update tasks</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span> <span class="o">=</span> <span class="n">conn</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_index_objects</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">objects</span><span class="p">,</span> <span class="n">case_sensitive</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates dictionary of objects from a list of objects for quick look up.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            key (str): Object atribute to be used as index key.</span>
+<span class="sd">            values (list): Object atributes to be included in dictionary.</span>
+<span class="sd">            objects (list): List of dictionaries.</span>
+<span class="sd">            case_sensitive (bool, optional): If False, keys will be converted</span>
+<span class="sd">                to lowercase</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary where values are lists of all entries whose &#39;key&#39;</span>
+<span class="sd">            matched.</span>
+
+<span class="sd">            {&quot;key&quot;: [{object1_values}, {object2_values}]}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
+            <span class="n">index_key</span> <span class="o">=</span> <span class="n">member</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">case_sensitive</span><span class="p">:</span>
+                <span class="n">index_key</span> <span class="o">=</span> <span class="n">index_key</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># Include all member attributes as values</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">values</span>
+            <span class="n">entry</span> <span class="o">=</span> <span class="p">{</span><span class="n">value</span><span class="p">:</span> <span class="n">member</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">v</span><span class="p">}</span>
+            <span class="k">if</span> <span class="n">index_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">index</span><span class="p">:</span>
+                <span class="n">index</span><span class="p">[</span><span class="n">index_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">entry</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">index</span><span class="p">[</span><span class="n">index_key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">entry</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">index</span>
+
+<div class="viewcode-block" id="GroupUpdateUtility.get_group_index"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.GroupUpdateUtility.get_group_index">[docs]</a>    <span class="k">def</span> <span class="nf">get_group_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;displayName&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;uuid&quot;</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;Creates an index of group values based on a group key.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            key (str, optional): Key to index on,</span>
+<span class="sd">            values (list, optional): Value keys to include in values. If empty,</span>
+<span class="sd">                all values are included.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary::</span>
+
+<span class="sd">            {</span>
+<span class="sd">                &quot;groupName&quot;: [{values}, {values}]</span>
+<span class="sd">            }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">all_groups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">get_groups</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index_objects</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">all_groups</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GroupUpdateUtility.get_entity_index"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.GroupUpdateUtility.get_entity_index">[docs]</a>    <span class="k">def</span> <span class="nf">get_entity_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_types</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;displayName&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[],</span>
+                         <span class="n">case_sensitive</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates an index of entities based on a group key.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            entity_types (list): List of entity_types,</span>
+<span class="sd">            key (str, optional): Key to index on.</span>
+<span class="sd">            values (list, optional): Value keys to include in values. If empty,</span>
+<span class="sd">                all values are included.</span>
+<span class="sd">            case_sensitive (bool, optional): Group entities with/without case</span>
+<span class="sd">                sensitivity</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary::</span>
+
+<span class="sd">            {</span>
+<span class="sd">                &quot;entity type&quot;: {&quot;entity_key&quot;: [{values}, {values}]}</span>
+<span class="sd">            }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">all_entities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">types</span><span class="o">=</span><span class="n">entity_types</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">e_type</span> <span class="ow">in</span> <span class="n">entity_types</span><span class="p">:</span>
+            <span class="n">e</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">all_entities</span> <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="s2">&quot;className&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">e_type</span><span class="p">]</span>
+            <span class="n">index</span><span class="p">[</span><span class="n">e_type</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index_objects</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span>
+                                                <span class="n">case_sensitive</span><span class="o">=</span><span class="n">case_sensitive</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">index</span></div>
+
+<div class="viewcode-block" id="GroupUpdateUtility.get_group_diff"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.GroupUpdateUtility.get_group_diff">[docs]</a>    <span class="k">def</span> <span class="nf">get_group_diff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group_uuid</span><span class="p">,</span> <span class="n">utd_members</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;uuid&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculates uuids to add and remove to match current group with &quot;utd&quot;.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            group_uuid (str): Target group uuid.</span>
+<span class="sd">            utd_members (list): List of desired up to date uuids.</span>
+<span class="sd">            key (str, optional): Key to compare members by.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary::</span>
+
+<span class="sd">            {</span>
+<span class="sd">                &quot;add&quot;: [&quot;uuid&quot;, &quot;uuid&quot;],</span>
+<span class="sd">                &quot;remove&quot;: [&quot;uuid&quot;, &quot;uuid&quot;]</span>
+<span class="sd">            }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">diffs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">cur_members</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">get_group_members</span><span class="p">(</span><span class="n">group_uuid</span><span class="p">)]</span>
+        <span class="n">diffs</span><span class="p">[</span><span class="s2">&quot;add&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">utd_members</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">cur_members</span><span class="p">)))</span>
+        <span class="n">diffs</span><span class="p">[</span><span class="s2">&quot;remove&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">cur_members</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">utd_members</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">diffs</span></div></div>
+
+<div class="viewcode-block" id="CSVGroupParser"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.CSVGroupParser">[docs]</a><span class="k">class</span> <span class="nc">CSVGroupParser</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a CSV and returns groupings based on headers</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            entity_type_header (str): Header for the column that contains the</span>
+<span class="sd">                entity types.</span>
+<span class="sd">            entity_name_header (str): Header for the column that contains the</span>
+<span class="sd">                entity names.</span>
+<span class="sd">            group_delimiter (str): String to separate group column values.</span>
+<span class="sd">            group_prefix (str): String to prepend group name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type_header</span><span class="p">,</span> <span class="n">entity_name_header</span><span class="p">,</span> <span class="n">group_delimiter</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">,</span>
+                 <span class="n">group_prefix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">entity_type_header</span> <span class="o">=</span> <span class="n">entity_type_header</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">entity_name_header</span> <span class="o">=</span> <span class="n">entity_name_header</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_delimiter</span> <span class="o">=</span> <span class="n">group_delimiter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_prefix</span> <span class="o">=</span> <span class="n">group_prefix</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_read_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Read CSV file</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file_path (str): Path to CSV files</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List of dictionaries with CSV file headers as the keys</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
+            <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictReader</span><span class="p">(</span><span class="n">csvfile</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">row</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">]</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_group_values_by_key</span><span class="p">(</span><span class="n">dicts</span><span class="p">,</span> <span class="n">group_keys</span><span class="p">,</span> <span class="n">value_keys</span><span class="p">,</span>
+                             <span class="n">group_prefix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">group_delimiter</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Groups value_keys that share the same group_key values.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dicts (list): List of dictionaries</span>
+<span class="sd">            group_keys (list): List of dictionary keys to group by.</span>
+<span class="sd">            value_keys (list): Dictionary keys for target value.</span>
+<span class="sd">            group_prefix (str): String to prefix group name.</span>
+<span class="sd">            group_delimiter (str): String to separate group_keys in group name.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary where values are lists of entities that all share the same</span>
+<span class="sd">            &#39;group_keys&#39; values and the key is the common group_key values</span>
+<span class="sd">            separated by the group_delimiter::</span>
+
+<span class="sd">                {&quot;group1_group2&quot;:</span>
+<span class="sd">                    [&quot;object_value&quot;, &quot;object_value2&quot;]}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dicts</span><span class="p">:</span>
+            <span class="n">cur_groupings</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="n">group_prefix</span><span class="p">:</span>
+                <span class="n">cur_groupings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">group_prefix</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">group_key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">group_keys</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="n">group_key</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+                    <span class="n">cur_groupings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">group_key</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">group_keys</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="n">group_name</span> <span class="o">=</span> <span class="n">group_delimiter</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cur_groupings</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">group_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+                        <span class="n">groups</span><span class="p">[</span><span class="n">group_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[{</span><span class="n">v</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value_keys</span><span class="p">}]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">groups</span><span class="p">[</span><span class="n">group_name</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[{</span><span class="n">v</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value_keys</span><span class="p">}]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="n">group_key</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cur_groupings</span><span class="p">:</span>
+                        <span class="n">cur_groupings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">group_key</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">groups</span>
+
+<div class="viewcode-block" id="CSVGroupParser.parse"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.CSVGroupParser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">csv_file</span><span class="p">,</span> <span class="n">group_headers</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="sd">&quot;&quot;&quot;Create unique groups from additional columns in the csv</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            csv_file (str): Path to csv file</span>
+<span class="sd">            group_headers (list, optional): List of headers to group from in order.</span>
+<span class="sd">                By default all headers in the csv are used in left to right order.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List of dictionaries::</span>
+
+<span class="sd">                {</span>
+<span class="sd">                 &quot;name&quot;: &quot;&quot;</span>
+<span class="sd">                 &quot;entity_type&quot;: &quot;&quot;</span>
+<span class="sd">                 &quot;members&quot;: []</span>
+<span class="sd">                }</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">contents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_csv</span><span class="p">(</span><span class="n">csv_file</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">entity_name_header</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity_type_header</span><span class="p">]</span><span class="o">+</span><span class="n">group_headers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">h</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">contents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="n">MissingHeaderError</span><span class="p">(</span><span class="s2">&quot;Header &#39;</span><span class="si">{}</span><span class="s2">&#39; could not be found&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">h</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">group_headers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">group_headers</span> <span class="o">=</span> <span class="p">[</span><span class="n">h</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">contents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">h</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">entity_name_header</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity_type_header</span><span class="p">]]</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_group_values_by_key</span><span class="p">(</span><span class="n">contents</span><span class="p">,</span> <span class="n">group_headers</span><span class="p">,</span>
+                                         <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">entity_name_header</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity_type_header</span><span class="p">],</span>
+                                         <span class="bp">self</span><span class="o">.</span><span class="n">group_prefix</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_delimiter</span><span class="p">)</span>
+        <span class="c1"># Create Group Dicts</span>
+        <span class="n">final_groups</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">group</span><span class="p">,</span> <span class="n">members</span> <span class="ow">in</span> <span class="n">groups</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">group</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">entity_types</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">m</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">entity_type_header</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">members</span><span class="p">]))</span>
+            <span class="k">for</span> <span class="n">e_type</span> <span class="ow">in</span> <span class="n">entity_types</span><span class="p">:</span>
+                <span class="n">g_members</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">members</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">m</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">entity_type_header</span><span class="p">]</span> <span class="o">==</span> <span class="n">e_type</span><span class="p">:</span>
+                        <span class="n">g_members</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">entity_name_header</span><span class="p">])</span>
+                <span class="n">final_groups</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span>
+                                     <span class="s2">&quot;entity_type&quot;</span><span class="p">:</span> <span class="n">e_type</span><span class="p">,</span>
+                                     <span class="s2">&quot;members&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">g_members</span><span class="p">))})</span>
+        <span class="k">return</span> <span class="n">final_groups</span></div></div>
+
+<div class="viewcode-block" id="StaticGroup"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.StaticGroup">[docs]</a><span class="k">class</span> <span class="nc">StaticGroup</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Object that helps create/update/remove a static group in Turbonomic</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        conn (VMTConnection): VMTConnection instance to target Turbonomic Server.</span>
+<span class="sd">        name (str): Name of Static Group.</span>
+<span class="sd">        members (list, optional): List of desired member uuids/names</span>
+<span class="sd">        entity_type (str): Type of entities in group</span>
+<span class="sd">            (VirtualMachine, PhysicalMachine, etc).</span>
+<span class="sd">        uuid (str, optional): UUID of group if already exists. If not provided,</span>
+<span class="sd">            retrieval will be attempted before operations that require it.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">members</span><span class="o">=</span><span class="p">[],</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">members</span> <span class="o">=</span> <span class="n">members</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">entity_type</span> <span class="o">=</span> <span class="n">entity_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uuid</span> <span class="o">=</span> <span class="n">uuid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__conn</span> <span class="o">=</span> <span class="n">conn</span>
+
+    <span class="k">def</span> <span class="nf">_requires_uuid</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Decorator that ensures the group uuid exists before the function</span>
+<span class="sd">        is executed.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NoMatchingGroupError: If no group is present with the name</span>
+<span class="sd">            DuplicateMatchingGroupError: If multiple groups are found matching</span>
+<span class="sd">                the same name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">check_uuid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_group_uuid</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">check_uuid</span>
+
+    <span class="k">def</span> <span class="nf">_requires_no_uuid</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Decorator that ensures the group does not already exist before the</span>
+<span class="sd">        function is executed.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            GroupAlreadyExistsError: If group already exists with the same name</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">check_uuid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">group_uuid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_group_uuid</span><span class="p">()</span>
+                <span class="k">raise</span> <span class="n">GroupAlreadyExistsError</span><span class="p">(</span><span class="s2">&quot;Group with name &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span>
+                                              <span class="s2">&quot; already exists with uuid&quot;</span>
+                                              <span class="s2">&quot; </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                           <span class="n">group_uuid</span><span class="p">))</span>
+            <span class="k">except</span> <span class="n">MissingUUIDError</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">check_uuid</span>
+
+<div class="viewcode-block" id="StaticGroup.remove_entities"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.StaticGroup.remove_entities">[docs]</a>    <span class="nd">@_requires_uuid</span>
+    <span class="k">def</span> <span class="nf">remove_entities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">members</span><span class="p">,</span> <span class="n">lookup_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">case_sensitive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">dryrun</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes specified members from the current group membership</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            members (list): List of member uuids/names to add/remove.</span>
+<span class="sd">            lookup_names (bool, optional): If True uuids will be collected from</span>
+<span class="sd">                the Turbonomic server that match the entity names in self.members</span>
+<span class="sd">            case_sensitive (bool, optional): If False and lookup_names is True,</span>
+<span class="sd">                names will be matched without case sensitivity.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            vmtconnect response object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">entities_to_remove</span> <span class="o">=</span> <span class="n">members</span>
+        <span class="k">if</span> <span class="n">lookup_names</span><span class="p">:</span>
+            <span class="c1"># Match displayNames to uuids</span>
+            <span class="n">entities_to_remove</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_match_names_to_uuid</span><span class="p">(</span><span class="n">entities_to_remove</span><span class="p">,</span>
+                                                           <span class="n">case_sensitive</span><span class="o">=</span><span class="n">case_sensitive</span><span class="p">)</span>
+        <span class="n">cur_members</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;uuid&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_members</span><span class="p">()]</span>
+        <span class="c1"># Remove current group members that are specified in members</span>
+        <span class="n">new_members</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">cur_members</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">entities_to_remove</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dryrun</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__conn</span><span class="o">.</span><span class="n">update_static_group_members</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                    <span class="bp">self</span><span class="o">.</span><span class="n">entity_type</span><span class="p">,</span>
+                                                    <span class="n">new_members</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StaticGroup.add_entities"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.StaticGroup.add_entities">[docs]</a>    <span class="nd">@_requires_uuid</span>
+    <span class="k">def</span> <span class="nf">add_entities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">members</span><span class="p">,</span> <span class="n">lookup_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">case_sensitive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                     <span class="n">dryrun</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds specified members to the current group membership</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            members (list): List of member uuids/names to add/remove.</span>
+<span class="sd">            lookup_names (bool, optional): If True uuids will be collected from</span>
+<span class="sd">                the Turbonomic server that match the entity names in self.members</span>
+<span class="sd">            case_sensitive (bool, optional): If False and lookup_names is True,</span>
+<span class="sd">                names will be matched without case sensitivity.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            vmtconnect response object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">entities_to_add</span> <span class="o">=</span> <span class="n">members</span>
+        <span class="k">if</span> <span class="n">lookup_names</span><span class="p">:</span>
+            <span class="c1"># Match displayNames to uuids</span>
+            <span class="n">entities_to_add</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_match_names_to_uuid</span><span class="p">(</span><span class="n">entities_to_add</span><span class="p">,</span>
+                                                           <span class="n">case_sensitive</span><span class="o">=</span><span class="n">case_sensitive</span><span class="p">)</span>
+        <span class="n">cur_members</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;uuid&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_members</span><span class="p">()]</span>
+        <span class="c1"># Add current group member to add new members</span>
+        <span class="n">new_members</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">cur_members</span><span class="o">+</span><span class="n">entities_to_add</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dryrun</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__conn</span><span class="o">.</span><span class="n">update_static_group_members</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                    <span class="bp">self</span><span class="o">.</span><span class="n">entity_type</span><span class="p">,</span>
+                                                    <span class="n">new_members</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StaticGroup.update"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.StaticGroup.update">[docs]</a>    <span class="nd">@_requires_uuid</span>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_add</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_remove</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lookup_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="n">case_sensitive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dryrun</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds/Removes members on the static group on the Turbonomic server.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            allow_add (bool, optional): If True, current and new members are</span>
+<span class="sd">                allowed to be added</span>
+<span class="sd">            allow_remove (bool, optional): If True, current members are allowed</span>
+<span class="sd">                to be removed.</span>
+<span class="sd">            lookup_names (bool, optional): If True uuids will be collected from</span>
+<span class="sd">                the Turbonomic server that match the entity names in self.members</span>
+<span class="sd">            case_sensitive (bool, optional): If False and lookup_names is True,</span>
+<span class="sd">                names will be matched without case sensitivity.</span>
+<span class="sd">            dryrun (bool, optional): If False, no changes are committed to</span>
+<span class="sd">                the Turbonomic server</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            vmtconnect response object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">entities_to_update</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span>
+        <span class="k">if</span> <span class="n">lookup_names</span><span class="p">:</span>
+            <span class="c1"># Match displayNames to uuids</span>
+            <span class="n">entities_to_update</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_match_names_to_uuid</span><span class="p">(</span><span class="n">entities_to_update</span><span class="p">,</span>
+                                                           <span class="n">case_sensitive</span><span class="o">=</span><span class="n">case_sensitive</span><span class="p">)</span>
+        <span class="n">new_members</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">allow_add</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">allow_remove</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="c1"># Completely replace group members</span>
+            <span class="n">new_members</span> <span class="o">=</span> <span class="n">entities_to_update</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cur_members</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;uuid&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_members</span><span class="p">()]</span>
+            <span class="k">if</span> <span class="n">allow_add</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="c1"># Add current group member to add new members</span>
+                <span class="n">new_members</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">cur_members</span><span class="o">+</span><span class="n">entities_to_update</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">allow_remove</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="c1"># Remove current group members that are specified in entities_to_update</span>
+                <span class="n">new_members</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">cur_members</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">entities_to_update</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dryrun</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__conn</span><span class="o">.</span><span class="n">update_static_group_members</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                    <span class="bp">self</span><span class="o">.</span><span class="n">entity_type</span><span class="p">,</span> <span class="n">new_members</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StaticGroup.remove"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.StaticGroup.remove">[docs]</a>    <span class="nd">@_requires_uuid</span>
+    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dryrun</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Deletes the group from the Turbonomic server.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dryrun (bool, optional): If False will not commit changes to</span>
+<span class="sd">                the Turbonomic server</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            vmtconnect response object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dryrun</span><span class="p">:</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__conn</span><span class="o">.</span><span class="n">del_group</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">uuid</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="n">resp</span></div>
+
+<div class="viewcode-block" id="StaticGroup.add"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.StaticGroup.add">[docs]</a>    <span class="nd">@_requires_no_uuid</span>
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lookup_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">case_sensitive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dryrun</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds the group to the Turbonomic server.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            lookup_names (bool, optional): If True uuids will be collected from</span>
+<span class="sd">                the Turbonomic server that match the entity names in self.members</span>
+<span class="sd">            dryrun (bool, optional): If False will not commit changes to</span>
+<span class="sd">                the Turbonomic server</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            vmtconnect response object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">entities_to_add</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span>
+        <span class="k">if</span> <span class="n">lookup_names</span><span class="p">:</span>
+            <span class="c1"># Match displayNames to uuids</span>
+            <span class="n">entities_to_add</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_match_names_to_uuid</span><span class="p">(</span><span class="n">entities_to_add</span><span class="p">,</span>
+                                                        <span class="n">case_sensitive</span><span class="o">=</span><span class="n">case_sensitive</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dryrun</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__conn</span><span class="o">.</span><span class="n">add_static_group</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity_type</span><span class="p">,</span>
+                                                <span class="n">entities_to_add</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StaticGroup.add_or_update"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.StaticGroup.add_or_update">[docs]</a>    <span class="k">def</span> <span class="nf">add_or_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Helper function to update group if it already exists or add it</span>
+<span class="sd">        if it does not.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dryrun (bool, optional): If False will not commit changes to</span>
+<span class="sd">                the Turbonomic server</span>
+<span class="sd">            **kwargs: Keyword arguments for self.update()</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            vmtconnect response object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_group_uuid</span><span class="p">()</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">MissingUUIDError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StaticGroup.get_current_members"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.StaticGroup.get_current_members">[docs]</a>    <span class="nd">@_requires_uuid</span>
+    <span class="k">def</span> <span class="nf">get_current_members</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get list of member entities that currently belong to the group.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            vmtconnect response object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__conn</span><span class="o">.</span><span class="n">get_group_members</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_match_names_to_uuid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">case_sensitive</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Matches display names to uuids</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NameMatchError: If an entity can&#39;t be found by name</span>
+<span class="sd">            MultipleMatchingNamesError: If multiple entities match a name</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">uuids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+            <span class="n">matches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__conn</span><span class="o">.</span><span class="n">search_by_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entity_type</span><span class="p">,</span>
+                                                 <span class="n">case_sensitive</span><span class="o">=</span><span class="n">case_sensitive</span><span class="p">,</span>
+                                                 <span class="n">from_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">NameMatchError</span><span class="p">(</span><span class="s2">&quot;Unable to find uuid for </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">MultipleMatchingNamesError</span><span class="p">(</span><span class="s2">&quot;Multiple </span><span class="si">{}</span><span class="s2"> with the name&quot;</span>
+                                                 <span class="s2">&quot; </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entity_type</span><span class="p">,</span>
+                                                              <span class="n">name</span><span class="p">))</span>
+            <span class="n">uuids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">matches</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;uuid&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">uuids</span>
+
+    <span class="k">def</span> <span class="nf">_get_group_uuid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetches uuid if not already present and assigns to self.uuid</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: uuid of group</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NoMatchingGroupError: If no group is present with the name</span>
+<span class="sd">            DuplicateMatchingGroupError: If multiple groups are found matching</span>
+<span class="sd">                the same name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">uuid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__conn</span><span class="o">.</span><span class="n">get_group_by_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">group</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">group</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uuid</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;uuid&quot;</span><span class="p">]</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">uuid</span>
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">group</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">DuplicateMatchingGroupError</span><span class="p">(</span><span class="s2">&quot;Found multiple groups&quot;</span>
+                                                      <span class="s2">&quot; matching name&quot;</span>
+                                                      <span class="s2">&quot; </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">NoMatchingGroupError</span><span class="p">(</span><span class="s2">&quot;No group found matching&quot;</span>
+                                       <span class="s2">&quot; name &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">uuid</span></div>
+
+<span class="c1">## ----------------------------------------------------</span>
+<span class="c1">##   Internal Utility Classes and Functions</span>
+<span class="c1">## ----------------------------------------------------</span>
+
+<span class="c1"># Logging</span>
+<span class="k">class</span> <span class="nc">_EventTracker</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Utility Object to store and log events by categories</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__changes</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">__add_change_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">category</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">category</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__changes</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__changes</span><span class="p">[</span><span class="n">category</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;total&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;events&quot;</span><span class="p">:[]}</span>
+
+    <span class="k">def</span> <span class="nf">track</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="p">(),</span> <span class="n">msg</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__add_change_object</span><span class="p">(</span><span class="n">category</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__changes</span><span class="p">[</span><span class="n">category</span><span class="p">][</span><span class="s2">&quot;total&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">event</span><span class="p">:</span>
+            <span class="c1"># TODO If expanding dictionary, move tuple conversion</span>
+            <span class="c1"># to static method</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__changes</span><span class="p">[</span><span class="n">category</span><span class="p">][</span><span class="s2">&quot;events&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;group name&quot;</span><span class="p">:</span><span class="n">event</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                                       <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">]})</span>
+            <span class="k">if</span> <span class="n">msg</span><span class="p">:</span>
+                <span class="n">_msg</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__changes</span>
+
+<span class="k">def</span> <span class="nf">_msg</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+         <span class="n">error</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Message handler&quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">LOGGER</span><span class="p">,</span> <span class="n">QUIET</span><span class="p">,</span> <span class="n">TRACE</span><span class="p">,</span> <span class="n">WARN</span>
+
+    <span class="n">empty_trace</span> <span class="o">=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">LOGGER</span>
+
+    <span class="k">if</span> <span class="n">TRACE</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span> <span class="o">!=</span> <span class="n">empty_trace</span><span class="p">:</span>
+        <span class="n">exc_info</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">if</span> <span class="n">warn</span><span class="p">:</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="s2">&quot;warn&quot;</span>
+
+    <span class="k">if</span> <span class="n">logger</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">level</span> <span class="o">==</span> <span class="s1">&#39;critical&#39;</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="n">exc_info</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">level</span> <span class="o">==</span> <span class="s1">&#39;error&#39;</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="n">exc_info</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">level</span> <span class="o">==</span> <span class="s1">&#39;warn&#39;</span> <span class="ow">or</span> <span class="n">level</span> <span class="o">==</span> <span class="s1">&#39;warning&#39;</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="n">exc_info</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">level</span> <span class="o">==</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="n">exc_info</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="n">exc_info</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">QUIET</span> <span class="ow">or</span> <span class="n">error</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">warn</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">WARN</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">warn</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Warning: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_log_summary</span><span class="p">(</span><span class="n">change_dict</span><span class="p">,</span> <span class="n">dryrun</span><span class="p">,</span> <span class="n">ignore_total</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="n">summary_bar</span> <span class="o">=</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">15</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;    Summary    &quot;</span>
+    <span class="n">dryrun_status</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dryrun</span><span class="p">:</span>
+        <span class="n">dryrun_status</span> <span class="o">=</span> <span class="s2">&quot;-dryrun enabled&quot;</span>
+    <span class="n">operations</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">category</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">change_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">operations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">attr</span><span class="p">[</span><span class="s2">&quot;total&quot;</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">category</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ignore_total</span><span class="p">:</span>
+            <span class="n">total</span> <span class="o">+=</span> <span class="n">attr</span><span class="p">[</span><span class="s2">&quot;total&quot;</span><span class="p">]</span>
+    <span class="n">operations</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">operations</span><span class="p">)</span>
+    <span class="n">summary_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="n">summary_bar</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">summary_bar</span><span class="p">,</span> <span class="n">dryrun_status</span><span class="p">,</span>
+                            <span class="n">operations</span><span class="p">,</span> <span class="n">summary_bar</span><span class="p">])</span>
+    <span class="n">_msg</span><span class="p">(</span><span class="n">summary_str</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s2">&quot;info&quot;</span><span class="p">)</span>
+
+<span class="c1"># Config Parsing</span>
+<span class="k">def</span> <span class="nf">_config_to_args</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">args_dict</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="n">config_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">config</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ignore</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">config_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">config_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">args_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">config_dict</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">args_dict</span>
+
+<span class="c1">## ----------------------------------------------------</span>
+<span class="c1">##   Main Function</span>
+<span class="c1">## ----------------------------------------------------</span>
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../developer_interfaces.html#csv_to_static_groups.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">csv_file</span><span class="p">,</span> <span class="n">entity_type_header</span><span class="o">=</span><span class="n">ENTITY_TYPE_HEADER</span><span class="p">,</span>
+         <span class="n">entity_name_header</span><span class="o">=</span><span class="n">ENTITY_NAME_HEADER</span><span class="p">,</span> <span class="n">group_headers</span><span class="o">=</span><span class="p">[],</span>
+         <span class="n">no_add</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">no_remove</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">case_sensitive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+         <span class="n">group_delimiter</span><span class="o">=</span><span class="n">GROUP_DELIMITER</span><span class="p">,</span> <span class="n">dryrun</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses groups from CSV and adds/updates/deletes groups.</span>
+<span class="sd">        Efficiently collects group and entity uuids to minimize api requests.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        conn (VMTConnection): VMTConnection instance to target Turbonomic Server</span>
+<span class="sd">        csv_file (str): Path to Target CSV</span>
+<span class="sd">        entity_type_header (str, optional): CSV header for column that contains</span>
+<span class="sd">            entity types.</span>
+<span class="sd">        entity_name_header (str, optional): CSV header for column that contains</span>
+<span class="sd">            entity names.</span>
+<span class="sd">        group_headers (list, optional): List of CSV headers to group members by</span>
+<span class="sd">            in order. If empty list, all headers except entity_type_header, and</span>
+<span class="sd">            entity_name_header are used from left to right.</span>
+<span class="sd">        no_add (bool, optional): If True, adding current entities to group is</span>
+<span class="sd">            disabled.</span>
+<span class="sd">        no_remove (bool, optional): If True, removing current entities from a</span>
+<span class="sd">            group is disabled</span>
+<span class="sd">        delete (bool, optional): If True, groups matching names from csv are</span>
+<span class="sd">            deleted</span>
+<span class="sd">        case_sensitive (bool, optional): If True, entities will be matched with</span>
+<span class="sd">            case-sensitivity</span>
+<span class="sd">        dryrun (bool, optional): If True, changes are not committed to the</span>
+<span class="sd">            target Turbonomic server.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dictionary with change events and totals for each change category</span>
+
+<span class="sd">        e.g. ::</span>
+
+<span class="sd">            {&quot;Change Category A&quot;: {</span>
+<span class="sd">                 &quot;total&quot;: int</span>
+<span class="sd">                 &quot;events&quot;:[</span>
+<span class="sd">                     {&quot;group name&quot;: str,</span>
+<span class="sd">                      &quot;message&quot;: str}</span>
+<span class="sd">                    ]</span>
+<span class="sd">                }}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create an _EventTracker instance</span>
+    <span class="n">group_changes</span> <span class="o">=</span> <span class="n">_EventTracker</span><span class="p">()</span>
+
+    <span class="c1"># Parse CSV groups and members</span>
+    <span class="n">csv_group_parser</span> <span class="o">=</span> <span class="n">CSVGroupParser</span><span class="p">(</span><span class="n">entity_type_header</span><span class="p">,</span> <span class="n">entity_name_header</span><span class="p">)</span>
+    <span class="n">groups</span> <span class="o">=</span> <span class="n">csv_group_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">csv_file</span><span class="p">,</span> <span class="n">group_headers</span><span class="o">=</span><span class="n">group_headers</span><span class="p">)</span>
+
+    <span class="c1"># Create a GroupUpdateUtility instance</span>
+    <span class="n">group_utils</span> <span class="o">=</span> <span class="n">GroupUpdateUtility</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+
+    <span class="c1"># Attempt to find group uuids now to minimize api calls</span>
+    <span class="n">group_index</span> <span class="o">=</span> <span class="n">group_utils</span><span class="o">.</span><span class="n">get_group_index</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+        <span class="n">uuid</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">group</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">group_index</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">group_index</span><span class="p">[</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">uuid</span> <span class="o">=</span> <span class="n">group_index</span><span class="p">[</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;uuid&quot;</span><span class="p">]</span>
+        <span class="n">group</span><span class="p">[</span><span class="s2">&quot;uuid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">uuid</span>
+
+    <span class="k">if</span> <span class="n">delete</span><span class="p">:</span>
+        <span class="c1"># Delete groups and return</span>
+        <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">group</span><span class="p">[</span><span class="s2">&quot;uuid&quot;</span><span class="p">]:</span>
+                <span class="k">continue</span>
+            <span class="n">group_instance</span> <span class="o">=</span> <span class="n">StaticGroup</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">group</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;entity_type&quot;</span><span class="p">],</span>
+                                         <span class="n">uuid</span><span class="o">=</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;uuid&quot;</span><span class="p">])</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">group_instance</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">dryrun</span><span class="o">=</span><span class="n">dryrun</span><span class="p">)</span>
+                <span class="n">event</span> <span class="o">=</span> <span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="s2">&quot;Deleted </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]))</span>
+                <span class="n">group_changes</span><span class="o">.</span><span class="n">track</span><span class="p">(</span><span class="n">TRK_DELETE</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">event</span> <span class="o">=</span> <span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="s2">&quot;Could not delete group. </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                <span class="n">group_changes</span><span class="o">.</span><span class="n">track</span><span class="p">(</span><span class="n">TRK_ERROR</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">group_changes</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+
+    <span class="c1"># Collect entity uuids and warn if they aren&#39;t found</span>
+    <span class="n">missing_members</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+        <span class="n">discovered_members</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">group</span><span class="p">[</span><span class="s2">&quot;members&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">missing_members</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">matches</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">search_by_name</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;entity_type&quot;</span><span class="p">],</span>
+                                          <span class="n">case_sensitive</span><span class="o">=</span><span class="n">case_sensitive</span><span class="p">,</span>
+                                          <span class="n">from_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">event</span> <span class="o">=</span> <span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="s2">&quot;Could not find </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;entity_type&quot;</span><span class="p">],</span>
+                                                                      <span class="n">member</span><span class="p">))</span>
+                <span class="n">group_changes</span><span class="o">.</span><span class="n">track</span><span class="p">(</span><span class="n">TRK_MISS_ENTITY</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">msg_str</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;More than one instance of&quot;</span>
+                           <span class="s2">&quot; </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> found&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;entity_type&quot;</span><span class="p">],</span>
+                                                  <span class="n">member</span><span class="p">))</span>
+                <span class="n">group_changes</span><span class="o">.</span><span class="n">track</span><span class="p">(</span><span class="n">TRK_MISS_ENTITY</span><span class="p">,</span> <span class="n">msg_str</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">discovered_members</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">matches</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;uuid&quot;</span><span class="p">])</span>
+        <span class="c1"># Overwrite members with uuids</span>
+        <span class="n">group</span><span class="p">[</span><span class="s2">&quot;members&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">discovered_members</span>
+
+    <span class="c1"># Manage groups</span>
+    <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+        <span class="n">group_instance</span> <span class="o">=</span> <span class="n">StaticGroup</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">group</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">group</span><span class="p">[</span><span class="s2">&quot;entity_type&quot;</span><span class="p">],</span>
+                                     <span class="n">group</span><span class="p">[</span><span class="s2">&quot;members&quot;</span><span class="p">],</span> <span class="n">uuid</span><span class="o">=</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;uuid&quot;</span><span class="p">])</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">group</span><span class="p">[</span><span class="s2">&quot;uuid&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">group_instance</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dryrun</span><span class="o">=</span><span class="n">dryrun</span><span class="p">)</span>
+                <span class="n">event</span> <span class="o">=</span> <span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="s2">&quot;Added </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">s)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+                                                      <span class="nb">len</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;members&quot;</span><span class="p">]),</span>
+                                                      <span class="n">group</span><span class="p">[</span><span class="s2">&quot;entity_type&quot;</span><span class="p">]))</span>
+                <span class="n">group_changes</span><span class="o">.</span><span class="n">track</span><span class="p">(</span><span class="n">TRK_ADD</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Find and log group differences</span>
+                <span class="n">diffs</span> <span class="o">=</span> <span class="n">group_utils</span><span class="o">.</span><span class="n">get_group_diff</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;uuid&quot;</span><span class="p">],</span>
+                                                   <span class="n">group</span><span class="p">[</span><span class="s2">&quot;members&quot;</span><span class="p">])</span>
+                <span class="n">elligible_changes</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">change_string</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">if</span> <span class="n">no_remove</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                    <span class="n">elligible_changes</span> <span class="o">+=</span> <span class="n">diffs</span><span class="p">[</span><span class="s2">&quot;remove&quot;</span><span class="p">]</span>
+                    <span class="n">change_string</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> removed&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">diffs</span><span class="p">[</span><span class="s2">&quot;remove&quot;</span><span class="p">]))]</span>
+                <span class="k">if</span> <span class="n">no_add</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                    <span class="n">elligible_changes</span> <span class="o">+=</span> <span class="n">diffs</span><span class="p">[</span><span class="s2">&quot;add&quot;</span><span class="p">]</span>
+                    <span class="n">change_string</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> added&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">diffs</span><span class="p">[</span><span class="s2">&quot;add&quot;</span><span class="p">]))]</span>
+                <span class="n">sum_diffs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">elligible_changes</span><span class="p">)</span>
+
+                <span class="c1"># Only update if needed</span>
+                <span class="k">if</span> <span class="n">sum_diffs</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">group_instance</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">dryrun</span><span class="o">=</span><span class="n">dryrun</span><span class="p">,</span> <span class="n">allow_add</span><span class="o">=</span><span class="ow">not</span> <span class="n">no_add</span><span class="p">,</span>
+                                          <span class="n">allow_remove</span><span class="o">=</span><span class="ow">not</span> <span class="n">no_remove</span><span class="p">)</span>
+                    <span class="n">event</span> <span class="o">=</span> <span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> Updated (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">change_string</span><span class="p">)))</span>
+                    <span class="n">group_changes</span><span class="o">.</span><span class="n">track</span><span class="p">(</span><span class="n">TRK_UPDATE</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s2">&quot;info&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">event</span> <span class="o">=</span> <span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> is already up to date&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]))</span>
+                    <span class="n">group_changes</span><span class="o">.</span><span class="n">track</span><span class="p">(</span><span class="n">TRK_SKIP</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s2">&quot;info&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">event</span> <span class="o">=</span> <span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="s2">&quot;Could not add or update &#39;</span><span class="si">{}</span><span class="s2">&#39;. </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span><span class="n">e</span><span class="p">))</span>
+            <span class="n">group_changes</span><span class="o">.</span><span class="n">track</span><span class="p">(</span><span class="n">TRK_ERROR</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s2">&quot;error&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">group_changes</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># Credentials</span>
+    <span class="n">__TURBO_TARGET</span> <span class="o">=</span> <span class="s2">&quot;localhost&quot;</span>
+    <span class="n">__TURBO_USER</span> <span class="o">=</span> <span class="s2">&quot;administrator&quot;</span>
+    <span class="n">__TURBO_PASS</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">__TURBO_CREDS</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+
+    <span class="c1"># Parse Arguments</span>
+    <span class="n">arg_parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Create/Update/Delete Static Groups From A CSV File&quot;</span><span class="p">)</span>
+    <span class="n">arg_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;input_csv&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to csv file&quot;</span><span class="p">)</span>
+
+    <span class="n">arg_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-u&quot;</span><span class="p">,</span> <span class="s2">&quot;--username&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Turbonomic Username, Password will be prompted.&quot;</span><span class="p">))</span>
+
+    <span class="n">arg_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--encoded_creds&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Base64 encoded credentials&quot;</span><span class="p">))</span>
+
+    <span class="n">arg_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-t&quot;</span><span class="p">,</span> <span class="s2">&quot;--target&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Turbonomic server address. Default=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">__TURBO_TARGET</span><span class="p">),</span>
+                            <span class="n">default</span><span class="o">=</span><span class="n">__TURBO_TARGET</span><span class="p">)</span>
+
+    <span class="n">arg_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--no_add&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Prevents adding entities when updating groups. (Delete Only)&quot;</span><span class="p">)</span>
+
+    <span class="n">arg_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--no_remove&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Prevents removing entities when updating groups. (Add Only)&quot;</span><span class="p">)</span>
+
+    <span class="n">arg_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--delete&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Delete groups&quot;</span><span class="p">)</span>
+
+    <span class="n">arg_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--case_insensitive&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Match entity names without case-sensitivity&quot;</span><span class="p">)</span>
+
+    <span class="n">arg_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--group_delimiter&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">default</span><span class="o">=</span><span class="n">GROUP_DELIMITER</span><span class="p">,</span>
+                            <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;String to separate grouping values. Default=&#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">GROUP_DELIMITER</span><span class="p">)))</span>
+
+    <span class="n">arg_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--group_headers&quot;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
+                            <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[],</span>
+                            <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;CSV Headers to group on. By default all &quot;</span>
+                                  <span class="s2">&quot; columns except &#39;</span><span class="si">{}</span><span class="s2">&#39; and &#39;</span><span class="si">{}</span><span class="s2">&#39; are used&quot;</span>
+                                  <span class="s2">&quot; in order from&quot;</span>
+                                  <span class="s2">&quot; left to right&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ENTITY_TYPE_HEADER</span><span class="p">,</span>
+                                                          <span class="n">ENTITY_NAME_HEADER</span><span class="p">)</span>
+                                  <span class="p">))</span>
+
+    <span class="n">arg_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--dryrun&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Prevents commits to the Turbonomic server&quot;</span><span class="p">)</span>
+
+    <span class="n">arg_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--no_warn&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_false&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Disable warning output to sysout&quot;</span><span class="p">)</span>
+
+    <span class="n">arg_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-q&quot;</span><span class="p">,</span> <span class="s2">&quot;--quiet&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Suppress console output&quot;</span><span class="p">)</span>
+
+    <span class="n">arg_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--log&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to log file&quot;</span><span class="p">)</span>
+
+    <span class="n">arg_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--ignore_insecure_warning&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Supress insecure HTTPS request warnings&quot;</span><span class="p">)</span>
+
+    <span class="n">arg_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--config&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Path to JSON Config file with arguments&quot;</span><span class="p">))</span>
+
+    <span class="c1"># Parse Arguments</span>
+    <span class="n">args_dict</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">arg_parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">())</span>
+
+    <span class="c1"># Overide CLI args if config file is passed</span>
+    <span class="k">if</span> <span class="n">args_dict</span><span class="p">[</span><span class="s2">&quot;config&quot;</span><span class="p">]:</span>
+        <span class="n">args_dict</span> <span class="o">=</span> <span class="n">_config_to_args</span><span class="p">(</span><span class="n">args_dict</span><span class="p">[</span><span class="s2">&quot;config&quot;</span><span class="p">],</span> <span class="n">args_dict</span><span class="p">,</span>
+                                   <span class="n">ignore</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="s2">&quot;input_csv&quot;</span><span class="p">])</span>
+
+    <span class="c1"># Overide credentials if passed as args</span>
+    <span class="k">if</span> <span class="n">args_dict</span><span class="p">[</span><span class="s2">&quot;encoded_creds&quot;</span><span class="p">]:</span>
+        <span class="n">__TURBO_CREDS</span> <span class="o">=</span> <span class="n">args_dict</span><span class="p">[</span><span class="s2">&quot;encoded_creds&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">args_dict</span><span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">]:</span>
+        <span class="n">__TURBO_USER</span> <span class="o">=</span> <span class="n">args_dict</span><span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">__TURBO_PASS</span> <span class="o">=</span> <span class="n">getpass</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">args_dict</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]:</span>
+        <span class="n">__TURBO_TARGET</span> <span class="o">=</span> <span class="n">args_dict</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">args_dict</span><span class="p">[</span><span class="s2">&quot;group_delimiter&quot;</span><span class="p">]:</span>
+        <span class="n">GROUP_DELIMITER</span> <span class="o">=</span> <span class="n">args_dict</span><span class="p">[</span><span class="s2">&quot;group_delimiter&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Supress insecure HTTPS warnings</span>
+    <span class="k">if</span> <span class="n">args_dict</span><span class="p">[</span><span class="s2">&quot;ignore_insecure_warning&quot;</span><span class="p">]:</span>
+        <span class="n">requests</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">(</span><span class="n">InsecureRequestWarning</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args_dict</span><span class="p">[</span><span class="s2">&quot;log&quot;</span><span class="p">]:</span>
+        <span class="c1"># Create Logger</span>
+        <span class="n">LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+        <span class="n">log_formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> </span><span class="si">%(levelname)s</span><span class="s1">  </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">,</span>
+                                          <span class="n">datefmt</span> <span class="o">=</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span>
+        <span class="n">log_handler</span> <span class="o">=</span> <span class="n">RotatingFileHandler</span><span class="p">(</span><span class="n">args_dict</span><span class="p">[</span><span class="s2">&quot;log&quot;</span><span class="p">],</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">maxBytes</span><span class="o">=</span><span class="mi">10</span><span class="o">*</span><span class="mi">1024</span><span class="o">*</span><span class="mi">1024</span><span class="p">,</span>
+                                          <span class="n">backupCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">log_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">log_formatter</span><span class="p">)</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">log_handler</span><span class="p">)</span>
+
+    <span class="n">QUIET</span> <span class="o">=</span> <span class="n">args_dict</span><span class="p">[</span><span class="s2">&quot;quiet&quot;</span><span class="p">]</span>
+    <span class="n">WARN</span> <span class="o">=</span>  <span class="n">args_dict</span><span class="p">[</span><span class="s2">&quot;no_warn&quot;</span><span class="p">]</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Make connection object</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">vconn</span><span class="o">.</span><span class="n">VMTConnection</span><span class="p">(</span><span class="n">__TURBO_TARGET</span><span class="p">,</span> <span class="n">__TURBO_USER</span><span class="p">,</span> <span class="n">__TURBO_PASS</span><span class="p">,</span>
+                                   <span class="n">__TURBO_CREDS</span><span class="p">)</span>
+        <span class="n">__TURBO_USER</span> <span class="o">=</span> <span class="n">__TURBO_PASS</span> <span class="o">=</span> <span class="n">__TURBO_ENC</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Execute main function</span>
+        <span class="n">change_summary</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">args_dict</span><span class="p">[</span><span class="s2">&quot;input_csv&quot;</span><span class="p">],</span>
+                              <span class="n">group_headers</span><span class="o">=</span><span class="n">args_dict</span><span class="p">[</span><span class="s2">&quot;group_headers&quot;</span><span class="p">],</span>
+                              <span class="n">no_add</span><span class="o">=</span><span class="n">args_dict</span><span class="p">[</span><span class="s2">&quot;no_add&quot;</span><span class="p">],</span>
+                              <span class="n">no_remove</span><span class="o">=</span><span class="n">args_dict</span><span class="p">[</span><span class="s2">&quot;no_remove&quot;</span><span class="p">],</span>
+                              <span class="n">dryrun</span><span class="o">=</span><span class="n">args_dict</span><span class="p">[</span><span class="s2">&quot;dryrun&quot;</span><span class="p">],</span>
+                              <span class="n">delete</span><span class="o">=</span><span class="n">args_dict</span><span class="p">[</span><span class="s2">&quot;delete&quot;</span><span class="p">],</span>
+                              <span class="n">case_sensitive</span><span class="o">=</span><span class="ow">not</span> <span class="n">args_dict</span><span class="p">[</span><span class="s2">&quot;case_insensitive&quot;</span><span class="p">])</span>
+
+        <span class="c1"># Log Summary</span>
+        <span class="n">_log_summary</span><span class="p">(</span><span class="n">change_summary</span><span class="p">,</span> <span class="n">args_dict</span><span class="p">[</span><span class="s2">&quot;dryrun&quot;</span><span class="p">],</span> <span class="n">ignore_total</span><span class="o">=</span><span class="p">[</span><span class="n">TRK_MISS_ENTITY</span><span class="p">])</span>
+    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">pass</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">_msg</span><span class="p">(</span><span class="s2">&quot;Fatal Error: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">level</span><span class="o">=</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Austin Portal.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>

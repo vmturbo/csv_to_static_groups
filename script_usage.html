@@ -1,0 +1,372 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Script Usage &mdash; csv_to_static_groups 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Supported CSV Format" href="supported_csv_format.html" />
+    <link rel="prev" title="Tutorial" href="tutorial.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> csv_to_static_groups
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Intallation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Script Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#simple-usage">Simple Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#script-options">Script Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-a-config-file">Using a Config File</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#importing-as-a-module">Importing As A Module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="supported_csv_format.html">Supported CSV Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_interfaces.html">Developer Interfaces</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">csv_to_static_groups</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Script Usage</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/script_usage.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="script-usage">
+<h1>Script Usage<a class="headerlink" href="#script-usage" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="simple-usage">
+<h2>Simple Usage<a class="headerlink" href="#simple-usage" title="Permalink to this headline">¶</a></h2>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ ./csv_to_static_groups.py sample_csv.csv -u administrator
+</pre></div>
+</div>
+<div class="section" id="script-options">
+<h3>Script Options<a class="headerlink" href="#script-options" title="Permalink to this headline">¶</a></h3>
+<p>Required Arguments (In positional order)</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="43%" />
+<col width="57%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">&quot;input_csv&quot;</span></code></td>
+<td>Path to input csv</td>
+</tr>
+</tbody>
+</table>
+<p>Optional arguments. Text between quotations indicates user specified content.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="53%" />
+<col width="47%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">-h</span></code>, <code class="docutils literal notranslate"><span class="pre">--help</span></code></td>
+<td>Show options.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-u</span> <span class="pre">&quot;USERNAME&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">--username</span> <span class="pre">&quot;USERNAME&quot;</span></code></td>
+<td>Turbonomic Username, Password will be
+prompted.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">--encoded_creds</span> <span class="pre">&quot;ENCODED_CREDS&quot;</span></code><sup>†</sup></td>
+<td>Base64 encoded credentials. Use this
+to provide all credentials without
+entering a password each time.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-t</span> <span class="pre">&quot;TARGET&quot;</span></code> , <code class="docutils literal notranslate"><span class="pre">--target</span> <span class="pre">&quot;TARGET&quot;</span></code></td>
+<td>Turbonomic server address.
+Default=localhost</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">--no_add</span></code></td>
+<td>Prevents adding entities when
+updating groups</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">--no_remove</span></code></td>
+<td>Prevents removing entities when
+updating groups</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">--delete</span></code></td>
+<td>Delete groups that match csv</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">--case_insensitive</span></code></td>
+<td>Match entity names without
+case-sensitivity</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">--group_delimiter</span> <span class="pre">&quot;GROUP_DELIMITER&quot;</span></code></td>
+<td>String to separate grouping values.
+Default=’_’</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">--group_headers</span>&#160; <span class="pre">&quot;GROUP_HEADERS&quot;</span> <span class="pre">...</span></code></td>
+<td>CSV Headers to group on. By default
+all columns except ‘Entity Type’ and
+‘Entity Name’ are used in order from
+left to right</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">--dryrun</span></code></td>
+<td>Prevents commits to the Turbonomic
+server</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">--no_warn</span></code></td>
+<td>Disable warning output to console</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">-q</span></code>, <code class="docutils literal notranslate"><span class="pre">--quiet</span></code></td>
+<td>Suppress output to console</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">--log</span> <span class="pre">&quot;LOG&quot;</span></code></td>
+<td>Path to file record log entries</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">--ignore_insecure_warning</span></code></td>
+<td>Supress insecure HTTPS request
+warnings</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">--config</span> <span class="pre">&quot;CONFIG&quot;</span></code></td>
+<td>Path to JSON Config file with
+arguments</td>
+</tr>
+</tbody>
+</table>
+<p><sup>† encoded_creds can be generated with this command
+(Remember to disable console history so the credentials are not stored)</sup>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ echo -n &quot;username:password&quot; | base64
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-a-config-file">
+<h3>Using a Config File<a class="headerlink" href="#using-a-config-file" title="Permalink to this headline">¶</a></h3>
+<p>All options can be specified in a single json formatted file for quick option
+configurations.</p>
+<p>Options passed with a config file will override any overlapping CLI arguments.</p>
+<p>An example config file could be:</p>
+<p><em>sample_config.json</em>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;enccreds&quot;</span><span class="p">:</span><span class="s2">&quot;dXNlcm5hbWU6cGFzc3dvcmQ=&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="s2">&quot;some_ip&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;case_insensitive&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+  <span class="s2">&quot;quiet&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+  <span class="s2">&quot;log&quot;</span><span class="p">:</span> <span class="s2">&quot;/somepath/logfile.log&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Then run it with:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ ./csv_to_static_groups.py sample_csv.csv --config sample_config.json
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="importing-as-a-module">
+<h2>Importing As A Module<a class="headerlink" href="#importing-as-a-module" title="Permalink to this headline">¶</a></h2>
+<p><em>csv_to_static_groups</em> can be imported to create your own CSV to static group
+script, create/update/delete static groups without a csv, or incorporate the
+main <em>csv_to_static_groups</em> function anywhere within your script.</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">vmtconnect</span>
+<span class="kn">import</span> <span class="nn">csv_to_static_groups</span>
+
+<span class="n">conn</span> <span class="o">=</span> <span class="n">vmtconnect</span><span class="o">.</span><span class="n">VMTConnection</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="s1">&#39;austin&#39;</span><span class="p">,</span>
+                                <span class="n">password</span><span class="o">=</span><span class="s1">&#39;*****&#39;</span><span class="p">)</span>
+
+<span class="n">my_group</span> <span class="o">=</span> <span class="n">csv_to_static_groups</span><span class="o">.</span><span class="n">StaticGroup</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="s2">&quot;My Group&quot;</span><span class="p">,</span> <span class="s2">&quot;VirtualMachine&quot;</span><span class="p">,</span>
+                                           <span class="p">[</span><span class="s2">&quot;SampleVM1&quot;</span><span class="p">,</span> <span class="s2">&quot;SampleVM2&quot;</span><span class="p">])</span>
+<span class="n">my_group</span><span class="o">.</span><span class="n">add_or_update</span><span class="p">(</span><span class="n">lookup_names</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Please reference the developer interfaces documentation and code examples.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="supported_csv_format.html" class="btn btn-neutral float-right" title="Supported CSV Format" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tutorial.html" class="btn btn-neutral" title="Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Austin Portal.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>
