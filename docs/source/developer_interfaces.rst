@@ -7,7 +7,7 @@ parse csvs into groups within your own scripts.
 Additionally, the main function of the script can be used to leverage all of the
 logic within another script.
 
-Please browse the example scripts.
+Please browse the `example scripts <https://github.com/vmturbo/csv_to_static_groups/tree/master/examples>`_.
 
 .. module:: csv_to_static_groups
 

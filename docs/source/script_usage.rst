@@ -117,4 +117,4 @@ main *csv_to_static_groups* function anywhere within your script.
     my_group.add_or_update(lookup_names=True)
 
 
-Please reference the developer interfaces documentation and code examples.
+Please reference the :doc:`developer interfaces documentation </developer_interfaces>` and `code examples <https://github.com/vmturbo/csv_to_static_groups/tree/master/examples>`_.

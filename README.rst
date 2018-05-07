@@ -1,3 +1,4 @@
+
 Creating Static Groups from a CSV
 =================================
 
@@ -6,11 +7,12 @@ operations for static groups via CSV.
 
 Installation
 ------------
-Simply copy *csv_to_static_groups.py* into the directory you are working in.
+Download the latest `release <https://github.com/vmturbo/csv_to_static_groups/releases>`_ and copy the *csv_to_static_groups.py* file into the directory you are working in.
 
-csv_to_static_groups.py does not support PyPi installation via pip or setuputils.
 
-Please see the installation documentation for requirements.
+csv_to_static_groups.py does not currently support PyPi installation via pip or setuputils.
+
+Please see the `installation <https://vmturbo.github.io/csv_to_static_groups/install.html>`_ documentation for requirements.
 
 Script Usage
 ------------
@@ -25,4 +27,4 @@ Simple Usage
 
 Documentation
 -------------
-Please read the full documentation here.
+Please read the full documentation `here <https://vmturbo.github.io/csv_to_static_groups/>`_.
