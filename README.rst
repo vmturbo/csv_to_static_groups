@@ -5,6 +5,12 @@ Creating Static Groups from a CSV
 *csv_to_static_groups.py* is a script/module designed to simplify bulk create/update/remove
 operations for static groups via CSV.
 
+**Disclaimer**
+
+This is a community driven project and is not supported by Turbonomic.
+
+If you encounter any bugs/problems please open an issue within Github.
+
 Installation
 ------------
 Download the latest `release <https://github.com/vmturbo/csv_to_static_groups/releases>`_ and copy the *csv_to_static_groups.py* file into the directory you are working in.
