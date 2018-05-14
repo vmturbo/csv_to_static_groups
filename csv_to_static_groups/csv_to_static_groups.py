@@ -12,7 +12,7 @@ import sys
 import json
 from functools import wraps
 
-__version__ = "1.0.0.dev"
+__version__ = "1.1.0.dev"
 
 ## ----------------------------------------------------
 ##   Global Variables
@@ -539,6 +539,19 @@ class StaticGroup(object):
             vmtconnect response object
         """
         return self.__conn.get_group_members(self.uuid)
+
+    def exists(self):
+        """Checks if group already exists in target environment.
+
+        Returns:
+            True: If group exists
+            False: If group does not exist
+        """
+        try:
+            self._get_group_uuid()
+            return True
+        except MissingUUIDError:
+            return False
 
     def _match_names_to_uuid(self, names, case_sensitive):
         """Matches display names to uuids
