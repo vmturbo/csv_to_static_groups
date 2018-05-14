@@ -544,8 +544,7 @@ class StaticGroup(object):
         """Checks if group already exists in target environment.
 
         Returns:
-            True: If group exists
-            False: If group does not exist
+            True if group exists or False if group does not exist
         """
         try:
             self._get_group_uuid()
