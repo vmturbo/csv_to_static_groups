@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Developer Interfaces &mdash; csv_to_static_groups 1.1.0 documentation</title>
+  <title>Developer Interfaces &mdash; csv_to_static_groups 1.1.1 documentation</title>
   
 
   
@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Exporting Groups to CSV" href="exporting_groups.html" />
     <link rel="prev" title="Supported CSV Format" href="supported_csv_format.html" /> 
 
   
@@ -105,6 +106,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="exporting_groups.html">Exporting Groups to CSV</a></li>
 </ul>
 
             
@@ -211,7 +213,7 @@ retrieval will be attempted before operations that require it.</li>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>lookup_names</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True uuids will be collected from
 the Turbonomic server that match the entity names in self.members</li>
-<li><strong>dryrun</strong> (<em>bool</em><em>, </em><em>optional</em>) – If False will not commit changes to
+<li><strong>dryrun</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will not commit changes to
 the Turbonomic server</li>
 </ul>
 </td>
@@ -257,7 +259,7 @@ if it does not.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>dryrun</strong> (<em>bool</em><em>, </em><em>optional</em>) – If False will not commit changes to
+<li><strong>dryrun</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will not commit changes to
 the Turbonomic server</li>
 <li><strong>**kwargs</strong> – Keyword arguments for self.update()</li>
 </ul>
@@ -306,7 +308,7 @@ the Turbonomic server</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dryrun</strong> (<em>bool</em><em>, </em><em>optional</em>) – If False will not commit changes to
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dryrun</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will not commit changes to
 the Turbonomic server</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">vmtconnect response object</td>
@@ -356,7 +358,7 @@ to be removed.</li>
 the Turbonomic server that match the entity names in self.members</li>
 <li><strong>case_sensitive</strong> (<em>bool</em><em>, </em><em>optional</em>) – If False and lookup_names is True,
 names will be matched without case sensitivity.</li>
-<li><strong>dryrun</strong> (<em>bool</em><em>, </em><em>optional</em>) – If False, no changes are committed to
+<li><strong>dryrun</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, no changes are committed to
 the Turbonomic server</li>
 </ul>
 </td>
@@ -709,6 +711,8 @@ target Turbonomic server.</li>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="exporting_groups.html" class="btn btn-neutral float-right" title="Exporting Groups to CSV" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
       
         <a href="supported_csv_format.html" class="btn btn-neutral" title="Supported CSV Format" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
@@ -741,7 +745,7 @@ target Turbonomic server.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.1.0',
+            VERSION:'1.1.1',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

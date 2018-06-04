@@ -4,7 +4,7 @@ Tutorial
 Scenario:
 ---------
 We need to create a custom group for each combination of department
-and owner. Unfortunately we do not have hypervisor tagging, so I can't
+and owner. Unfortunately we do not have hypervisor tagging, so we can't
 create these groups with several dynamic groups.
 
 However, we do have an up to date spreadsheet of our virtual machines' departments

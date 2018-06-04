@@ -1,0 +1,323 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Exporting Groups to CSV &mdash; csv_to_static_groups 1.1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Developer Interfaces" href="developer_interfaces.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> csv_to_static_groups
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Intallation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="script_usage.html">Script Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="supported_csv_format.html">Supported CSV Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_interfaces.html">Developer Interfaces</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Exporting Groups to CSV</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#script-usage">Script Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sample-output">Sample Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#script-options">Script Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-a-config-file">Using a Config File</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">csv_to_static_groups</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Exporting Groups to CSV</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/exporting_groups.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="exporting-groups-to-csv">
+<h1>Exporting Groups to CSV<a class="headerlink" href="#exporting-groups-to-csv" title="Permalink to this headline">¶</a></h1>
+<p>Some users may find the need to export custom groups.</p>
+<p>Individual groups can be exported to CSV using Turbonomic’s UI:</p>
+<blockquote>
+<div><a class="reference internal image-reference" href="_images/group_to_csv.gif"><img alt="_images/group_to_csv.gif" src="_images/group_to_csv.gif" style="width: 575.2px; height: 385.20000000000005px;" /></a>
+</div></blockquote>
+<p>For exporting all groups in a Turbonomic instance, you can use the
+<a class="reference external" href="https://github.com/vmturbo/csv_to_static_groups/blob/master/examples/export_groups_to_csv.py">export_groups_to_csv.py example script</a>.</p>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Place <em>export_groups_to_csv.py</em> into the same directory as <em>csv_to_static_groups.py</em> and <em>vmtconnect.py</em></p>
+</div>
+<div class="section" id="script-usage">
+<h2>Script Usage<a class="headerlink" href="#script-usage" title="Permalink to this headline">¶</a></h2>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ ./export_groups_to_csv.py output.csv -u administrator
+</pre></div>
+</div>
+<div class="section" id="sample-output">
+<h3>Sample Output<a class="headerlink" href="#sample-output" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><a class="reference internal image-reference" href="_images/export_csv.png"><img alt="_images/export_csv.png" src="_images/export_csv.png" style="width: 388.0px; height: 173.60000000000002px;" /></a>
+</div></blockquote>
+</div>
+<div class="section" id="script-options">
+<h3>Script Options<a class="headerlink" href="#script-options" title="Permalink to this headline">¶</a></h3>
+<p>Required Arguments (In positional order)</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="43%" />
+<col width="57%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">&quot;input_csv&quot;</span></code></td>
+<td>Path to input csv</td>
+</tr>
+</tbody>
+</table>
+<p>Optional arguments. Text between quotations indicates user specified content.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="53%" />
+<col width="47%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">-h</span></code>, <code class="docutils literal notranslate"><span class="pre">--help</span></code></td>
+<td>Show options.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">--all_groups</span></code></td>
+<td>Also export non-custom Turbonomic
+groups</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">--include_group_type</span></code></td>
+<td>Include a column to indicate if a
+group is static or dynamic</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-u</span> <span class="pre">&quot;USERNAME&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">--username</span> <span class="pre">&quot;USERNAME&quot;</span></code></td>
+<td>Turbonomic Username, Password will be
+prompted.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">--encoded_creds</span> <span class="pre">&quot;ENCODED_CREDS&quot;</span></code><sup>†</sup></td>
+<td>Base64 encoded credentials. Use this
+to provide all credentials without
+entering a password each time.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-t</span> <span class="pre">&quot;TARGET&quot;</span></code> , <code class="docutils literal notranslate"><span class="pre">--target</span> <span class="pre">&quot;TARGET&quot;</span></code></td>
+<td>Turbonomic server address.
+Default=localhost</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">--ignore_insecure_warning</span></code></td>
+<td>Supress insecure HTTPS request
+warnings</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">--config</span> <span class="pre">&quot;CONFIG&quot;</span></code></td>
+<td>Path to JSON Config file with
+arguments</td>
+</tr>
+</tbody>
+</table>
+<p><sup>† encoded_creds can be generated with this command
+(Remember to disable console history so the credentials are not stored)</sup>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ echo -n &quot;username:password&quot; | base64
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-a-config-file">
+<h3>Using a Config File<a class="headerlink" href="#using-a-config-file" title="Permalink to this headline">¶</a></h3>
+<p>See <a class="reference external" href="script_usage.html#using-a-config-file">csv_to_static_groups doc</a>.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="developer_interfaces.html" class="btn btn-neutral" title="Developer Interfaces" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Austin Portal.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.1.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>
