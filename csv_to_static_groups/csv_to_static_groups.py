@@ -12,7 +12,7 @@ import sys
 import json
 from functools import wraps
 
-__version__ = "1.1.0.dev"
+__version__ = "1.1.1.dev"
 
 ## ----------------------------------------------------
 ##   Global Variables
@@ -448,7 +448,7 @@ class StaticGroup(object):
                 the Turbonomic server that match the entity names in self.members
             case_sensitive (bool, optional): If False and lookup_names is True,
                 names will be matched without case sensitivity.
-            dryrun (bool, optional): If False, no changes are committed to
+            dryrun (bool, optional): If True, no changes are committed to
                 the Turbonomic server
 
         Returns:
@@ -480,7 +480,7 @@ class StaticGroup(object):
         """Deletes the group from the Turbonomic server.
 
         Args:
-            dryrun (bool, optional): If False will not commit changes to
+            dryrun (bool, optional): If True, will not commit changes to
                 the Turbonomic server
 
         Returns:
@@ -498,7 +498,7 @@ class StaticGroup(object):
         Args:
             lookup_names (bool, optional): If True uuids will be collected from
                 the Turbonomic server that match the entity names in self.members
-            dryrun (bool, optional): If False will not commit changes to
+            dryrun (bool, optional): If True, will not commit changes to
                 the Turbonomic server
 
         Returns:
@@ -518,7 +518,7 @@ class StaticGroup(object):
         if it does not.
 
         Args:
-            dryrun (bool, optional): If False will not commit changes to
+            dryrun (bool, optional): If True, will not commit changes to
                 the Turbonomic server
             **kwargs: Keyword arguments for self.update()
 
