@@ -10,3 +10,4 @@ csv_to_static_groups Documentation
    script_usage
    supported_csv_format
    developer_interfaces
+   exporting_groups

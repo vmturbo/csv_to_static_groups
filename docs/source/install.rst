@@ -16,4 +16,4 @@ and vmt-connect_ in the same directory.
 
 - CPython_ >= 3.3
 - requests_ >= 2.10.0
-- vmt-connect_ >= 1.2.5
+- vmt-connect_ >= 2.0.0
