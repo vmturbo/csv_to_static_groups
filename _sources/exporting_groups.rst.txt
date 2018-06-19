@@ -34,7 +34,7 @@ Script Options
 Required Arguments (In positional order)
 
 +--------------------------+----------------------------------+
-| ``"input_csv"``          | Path to input csv                |
+| ``"output_csv"``         | Path to input csv                |
 +--------------------------+----------------------------------+
 
 Optional arguments. Text between quotations indicates user specified content.
@@ -58,7 +58,7 @@ Optional arguments. Text between quotations indicates user specified content.
 | ``-t "TARGET"`` , ``--target "TARGET"``   | Turbonomic server address.           |
 |                                           | Default=localhost                    |
 +-------------------------------------------+--------------------------------------+
-| ``--ignore_insecure_warning``             | Supress insecure HTTPS request       |
+| ``--ignore_insecure_warning``             | Suppress insecure HTTPS request      |
 |                                           | warnings                             |
 +-------------------------------------------+--------------------------------------+
 | ``--config "CONFIG"``                     | Path to JSON Config file with        |
