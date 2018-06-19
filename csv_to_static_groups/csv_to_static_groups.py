@@ -12,7 +12,7 @@ import sys
 import json
 from functools import wraps
 
-__version__ = "1.1.2.dev"
+__version__ = "1.1.2"
 
 ## ----------------------------------------------------
 ##   Global Variables
