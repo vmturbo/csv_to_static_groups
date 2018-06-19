@@ -12,7 +12,7 @@ import sys
 import json
 from functools import wraps
 
-__version__ = "1.1.1"
+__version__ = "1.1.2.dev"
 
 ## ----------------------------------------------------
 ##   Global Variables
@@ -897,7 +897,7 @@ if __name__ == "__main__":
                             help="Path to log file")
 
     arg_parser.add_argument("--ignore_insecure_warning", action="store_true", required=False,
-                            help="Supress insecure HTTPS request warnings")
+                            help="Suppress insecure HTTPS request warnings")
 
     arg_parser.add_argument("--config", action="store", required=False,
                             help=("Path to JSON Config file with arguments"))

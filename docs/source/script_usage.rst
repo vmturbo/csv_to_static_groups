@@ -60,7 +60,7 @@ Optional arguments. Text between quotations indicates user specified content.
 +-------------------------------------------+--------------------------------------+
 | ``--log "LOG"``                           | Path to file record log entries      |
 +-------------------------------------------+--------------------------------------+
-| ``--ignore_insecure_warning``             | Supress insecure HTTPS request       |
+| ``--ignore_insecure_warning``             | Suppress insecure HTTPS request      |
 |                                           | warnings                             |
 +-------------------------------------------+--------------------------------------+
 | ``--config "CONFIG"``                     | Path to JSON Config file with        |

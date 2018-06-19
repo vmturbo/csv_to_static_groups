@@ -9,7 +9,7 @@ from getpass import getpass
 import csv
 import sys
 
-__version__ = "1.0.0"
+__version__ = "1.0.1.dev"
 
 class CSV_HEADER(Enum):
     entity_type = "Entity Type"
@@ -86,7 +86,7 @@ if __name__ == "__main__":
                             help="Turbonomic server address. Default={}".format(__TURBO_TARGET),
                             default=__TURBO_TARGET)
     arg_parser.add_argument("--ignore_insecure_warning", action="store_true", required=False,
-                            help="Supress insecure HTTPS request warnings")
+                            help="Suppress insecure HTTPS request warnings")
     arg_parser.add_argument("--config", action="store", required=False,
                             help=("Path to JSON Config file with arguments"))
 
