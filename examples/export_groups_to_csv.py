@@ -9,7 +9,7 @@ from getpass import getpass
 import csv
 import sys
 
-__version__ = "1.0.1.dev"
+__version__ = "1.0.1"
 
 class CSV_HEADER(Enum):
     entity_type = "Entity Type"

@@ -26,7 +26,7 @@ author = 'Austin Portal'
 # The short X.Y version
 version = ''
 # The full version, including alpha/beta/rc tags
-release = '1.1.2.dev'
+release = '1.1.2'
 
 
 # -- General configuration ---------------------------------------------------
