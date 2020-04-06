@@ -1,6 +1,6 @@
 .. _CPython: https://www.python.org
 .. _Requests: http://docs.python-requests.org/en/master/
-.. _vmt-connect: https://github.com/rastern/vmt-connect
+.. _vmt-connect: https://github.com/turbonomic/vmt-connect
 
 Intallation
 ***********
