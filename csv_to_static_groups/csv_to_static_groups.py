@@ -12,7 +12,7 @@ import sys
 import json
 from functools import wraps
 
-__version__ = "1.1.2"
+__version__ = "1.1.3"
 
 ## ----------------------------------------------------
 ##   Global Variables
@@ -472,9 +472,8 @@ class StaticGroup(object):
                 # Remove current group members that are specified in entities_to_update
                 new_members = list(set(cur_members).difference(set(entities_to_update)))
         if not dryrun:
-            self.__conn.update_static_group_members(self.uuid, self.name,
-                                                    self.entity_type, new_members)
-
+            self.__conn.update_static_group_members(self.uuid, new_members,
+                                                    name=self.name, type=self.entity_type)
     @_requires_uuid
     def remove(self, dryrun=False):
         """Deletes the group from the Turbonomic server.
@@ -563,7 +562,7 @@ class StaticGroup(object):
         for name in names:
             matches = self.__conn.search_by_name(name, type=self.entity_type,
                                                  case_sensitive=case_sensitive,
-                                                 from_cache=True)
+                                                from_cache=True)
             if len(matches) == 0:
                 raise NameMatchError("Unable to find uuid for {}".format(name))
             if len(matches) > 1:
@@ -947,8 +946,8 @@ if __name__ == "__main__":
 
     try:
         # Make connection object
-        conn = vconn.VMTConnection(__TURBO_TARGET, __TURBO_USER, __TURBO_PASS,
-                                   __TURBO_CREDS)
+        conn = vconn.Session(__TURBO_TARGET, __TURBO_USER, __TURBO_PASS,
+                             __TURBO_CREDS)
         __TURBO_USER = __TURBO_PASS = __TURBO_ENC = None
         # Execute main function
         change_summary = main(conn, args_dict["input_csv"],
