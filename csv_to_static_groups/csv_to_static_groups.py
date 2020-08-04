@@ -472,8 +472,6 @@ class StaticGroup(object):
                 # Remove current group members that are specified in entities_to_update
                 new_members = list(set(cur_members).difference(set(entities_to_update)))
         if not dryrun:
-            # self.__conn.update_static_group_members(self.uuid, self.name,
-            #                                         self.entity_type, new_members)
             self.__conn.update_static_group_members(self.uuid, new_members, 
                                                     name=self.name, type=self.entity_type)
     @_requires_uuid
