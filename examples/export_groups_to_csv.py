@@ -9,7 +9,7 @@ from getpass import getpass
 import csv
 import sys
 
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 
 class CSV_HEADER(Enum):
     entity_type = "Entity Type"
@@ -117,8 +117,8 @@ if __name__ == "__main__":
 
     try:
         # Make connection object
-        conn = vconn.VMTConnection(__TURBO_TARGET, __TURBO_USER, __TURBO_PASS,
-                                   __TURBO_CREDS)
+        conn = vconn.Session(__TURBO_TARGET, __TURBO_USER, __TURBO_PASS,
+                             __TURBO_CREDS)
         __TURBO_USER = __TURBO_PASS = __TURBO_ENC = None
 
         main(conn, args_dict["output_csv"], args_dict["include_group_type"],
