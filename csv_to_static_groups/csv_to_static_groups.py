@@ -561,7 +561,8 @@ class StaticGroup(object):
         uuids = []
         for name in names:
             matches = self.__conn.search_by_name(name, type=self.entity_type,
-                                                 case_sensitive=case_sensitive)
+                                                 case_sensitive=case_sensitive,
+                                                from_cache=True)
             if len(matches) == 0:
                 raise NameMatchError("Unable to find uuid for {}".format(name))
             if len(matches) > 1:
@@ -779,7 +780,8 @@ def main(conn, csv_file, entity_type_header=ENTITY_TYPE_HEADER,
             if member in missing_members:
                 continue
             matches = conn.search_by_name(member, type=group["entity_type"],
-                                          case_sensitive=case_sensitive)
+                                          case_sensitive=case_sensitive,
+                                          from_cache=True)
             if len(matches) == 0:
                 event = (group["name"], "Could not find {} {}".format(group["entity_type"],
                                                                       member))
