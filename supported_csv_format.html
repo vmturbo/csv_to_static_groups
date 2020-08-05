@@ -1,56 +1,58 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Supported CSV Format &mdash; csv_to_static_groups 1.1.2 documentation</title>
+  <title>Supported CSV Format &mdash; csv_to_static_groups 1.1.3 documentation</title>
   
 
   
-  
-  
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Developer Interfaces" href="developer_interfaces.html" />
     <link rel="prev" title="Script Usage" href="script_usage.html" /> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
-            <a href="index.html" class="icon icon-home"> csv_to_static_groups
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> csv_to_static_groups
           
 
           
@@ -73,6 +75,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -104,6 +107,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -142,7 +146,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Supported CSV Format</li>
     
@@ -167,10 +171,10 @@
 <h1>Supported CSV Format<a class="headerlink" href="#supported-csv-format" title="Permalink to this headline">¶</a></h1>
 <p><em>csv_to_static_groups</em> has four basic CSV requirements:</p>
 <ol class="arabic simple">
-<li>The input file must be a Comma Separated Values (.csv) file.</li>
-<li>The first row must contain headers for each column.</li>
-<li>The two required headers must exist.</li>
-<li>At least one column must have group names.</li>
+<li><p>The input file must be a Comma Separated Values (.csv) file.</p></li>
+<li><p>The first row must contain headers for each column.</p></li>
+<li><p>The two required headers must exist.</p></li>
+<li><p>At least one column must have group names.</p></li>
 </ol>
 <div class="section" id="required-headers">
 <h2>Required Headers<a class="headerlink" href="#required-headers" title="Permalink to this headline">¶</a></h2>
@@ -178,18 +182,17 @@
 <p>These columns give <em>csv_to_static_groups</em> information about the entities to place
 in groups.</p>
 <ul class="simple">
-<li><dl class="first docutils">
-<dt>Entity Type contains the entity class</dt>
-<dd><ul class="first last">
-<li>VirtualMachine</li>
-<li>PhysicalMachine</li>
-<li>Storage</li>
-<li>Cluster</li>
+<li><dl class="simple">
+<dt>Entity Type contains the entity class</dt><dd><ul>
+<li><p>VirtualMachine</p></li>
+<li><p>PhysicalMachine</p></li>
+<li><p>Storage</p></li>
+<li><p>Cluster</p></li>
 </ul>
 </dd>
 </dl>
 </li>
-<li>Entity Name contains the name of the entity</li>
+<li><p>Entity Name contains the name of the entity</p></li>
 </ul>
 <p>Example of these headers:</p>
 <img alt="_images/required_columns.png" src="_images/required_columns.png" />
@@ -202,8 +205,8 @@ in groups.</p>
 <h3>Simple Groupings<a class="headerlink" href="#simple-groupings" title="Permalink to this headline">¶</a></h3>
 <p>The following sample CSV would add/update/delete 2 groups.</p>
 <ul class="simple">
-<li>“Engineering” (4 VMs)</li>
-<li>“Sales” (3 VMs)</li>
+<li><p>“Engineering” (4 VMs)</p></li>
+<li><p>“Sales” (3 VMs)</p></li>
 </ul>
 <img alt="_images/one_level_grouping.png" src="_images/one_level_grouping.png" />
 </div>
@@ -211,10 +214,10 @@ in groups.</p>
 <h3>Multi-level Groupings<a class="headerlink" href="#multi-level-groupings" title="Permalink to this headline">¶</a></h3>
 <p>The following sample CSV would add/update/delete 4 groups.</p>
 <ul class="simple">
-<li>“Engineering_John” (3 VMs)</li>
-<li>“Engineering_Greg” (1 VM)</li>
-<li>“Sales_Bill” (1 VM)</li>
-<li>“Sales_Steve” (2 VMs)</li>
+<li><p>“Engineering_John” (3 VMs)</p></li>
+<li><p>“Engineering_Greg” (1 VM)</p></li>
+<li><p>“Sales_Bill” (1 VM)</p></li>
+<li><p>“Sales_Steve” (2 VMs)</p></li>
 </ul>
 <img alt="_images/two_level_grouping.png" src="_images/two_level_grouping.png" />
 <p>This group level stacking can be repeated indefinitely.</p>
@@ -223,18 +226,17 @@ in groups.</p>
 <h3>Manually Specifying Grouping Headers<a class="headerlink" href="#manually-specifying-grouping-headers" title="Permalink to this headline">¶</a></h3>
 <p>You can specify specific grouping headers to change the order of the groupings
 or specify specific groupings</p>
-<dl class="docutils">
-<dt>For example, to add/update/delete only the department groupings:</dt>
-<dd><ul class="first last simple">
-<li>“Engineering” (4 VMs)</li>
-<li>“Sales” (3 VMs) using this CSV:</li>
+<dl class="simple">
+<dt>For example, to add/update/delete only the department groupings:</dt><dd><ul class="simple">
+<li><p>“Engineering” (4 VMs)</p></li>
+<li><p>“Sales” (3 VMs) using this CSV:</p></li>
 </ul>
 </dd>
 </dl>
 <p>From this csv:</p>
 <img alt="_images/two_level_grouping.png" src="_images/two_level_grouping.png" />
 <p>We can run:</p>
-<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ ./csv_to_static_groups.py sample_csv.csv --group_headers &quot;Department&quot;
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./csv_to_static_groups.py sample_csv.csv --group_headers <span class="s2">&quot;Department&quot;</span>
 </pre></div>
 </div>
 </div>
@@ -244,10 +246,10 @@ or specify specific groupings</p>
 considers the columns with content.</p>
 <p>For example the following csv would produce 4 groups.</p>
 <ul class="simple">
-<li>“Engineering_John” (2 VMs)</li>
-<li>“Sales_Bill” (1 VM)</li>
-<li>“Sales_Steve” (2 VMs)</li>
-<li>“Engineering” (4 VMs)</li>
+<li><p>“Engineering_John” (2 VMs)</p></li>
+<li><p>“Sales_Bill” (1 VM)</p></li>
+<li><p>“Sales_Steve” (2 VMs)</p></li>
+<li><p>“Engineering” (4 VMs)</p></li>
 </ul>
 <img alt="_images/blank_cells_grouping.png" src="_images/blank_cells_grouping.png" />
 <p>Notice that a “Engineering” group is created containing every VM that had Engineering
@@ -259,8 +261,8 @@ in the “Department” header.</p>
 after the grouping columns.</p>
 <p>The following would produce these 2 groups:</p>
 <ul class="simple">
-<li>temp_Engineering_VMs (4 VMs)</li>
-<li>temp_Sales_VMs (3 VMs)</li>
+<li><p>temp_Engineering_VMs (4 VMs)</p></li>
+<li><p>temp_Sales_VMs (3 VMs)</p></li>
 </ul>
 <img alt="_images/prefix_and_suffix.png" src="_images/prefix_and_suffix.png" />
 </div>
@@ -278,7 +280,7 @@ after the grouping columns.</p>
         <a href="developer_interfaces.html" class="btn btn-neutral float-right" title="Developer Interfaces" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="script_usage.html" class="btn btn-neutral" title="Script Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="script_usage.html" class="btn btn-neutral float-left" title="Script Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -287,11 +289,19 @@ after the grouping columns.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Austin Portal.
+        
+        &copy; Copyright 2018 Austin Portal; 2020 Turbonomic
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -303,38 +313,16 @@ after the grouping columns.</p>
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'1.1.2',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
   <script type="text/javascript">
       jQuery(function () {
-          
-          SphinxRtdTheme.Navigation.enableSticky();
-          
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

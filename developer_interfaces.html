@@ -1,56 +1,58 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Developer Interfaces &mdash; csv_to_static_groups 1.1.2 documentation</title>
+  <title>Developer Interfaces &mdash; csv_to_static_groups 1.1.3 documentation</title>
   
 
   
-  
-  
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Exporting Groups to CSV" href="exporting_groups.html" />
     <link rel="prev" title="Supported CSV Format" href="supported_csv_format.html" /> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
-            <a href="index.html" class="icon icon-home"> csv_to_static_groups
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> csv_to_static_groups
           
 
           
@@ -73,6 +75,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -113,6 +116,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -151,7 +155,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Developer Interfaces</li>
     
@@ -181,246 +185,214 @@ logic within another script.</p>
 <p>Please browse the <a class="reference external" href="https://github.com/vmturbo/csv_to_static_groups/tree/master/examples">example scripts</a>.</p>
 <span class="target" id="module-csv_to_static_groups"></span><div class="section" id="staticgroup">
 <h2>StaticGroup<a class="headerlink" href="#staticgroup" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="csv_to_static_groups.StaticGroup">
-<em class="property">class </em><code class="descclassname">csv_to_static_groups.</code><code class="descname">StaticGroup</code><span class="sig-paren">(</span><em>conn</em>, <em>name</em>, <em>entity_type</em>, <em>members=[]</em>, <em>uuid=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#StaticGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.StaticGroup" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">csv_to_static_groups.</code><code class="sig-name descname">StaticGroup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">conn</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">entity_type</span></em>, <em class="sig-param"><span class="n">members</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">uuid</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#StaticGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.StaticGroup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Object that helps create/update/remove a static group in Turbonomic</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>conn</strong> (<em>VMTConnection</em>) – VMTConnection instance to target Turbonomic Server.</li>
-<li><strong>name</strong> (<em>str</em>) – Name of Static Group.</li>
-<li><strong>members</strong> (<em>list</em><em>, </em><em>optional</em>) – List of desired member uuids/names</li>
-<li><strong>entity_type</strong> (<em>str</em>) – Type of entities in group
-(VirtualMachine, PhysicalMachine, etc).</li>
-<li><strong>uuid</strong> (<em>str</em><em>, </em><em>optional</em>) – UUID of group if already exists. If not provided,
-retrieval will be attempted before operations that require it.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>conn</strong> (<em>VMTConnection</em>) – VMTConnection instance to target Turbonomic Server.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of Static Group.</p></li>
+<li><p><strong>members</strong> (<em>list</em><em>, </em><em>optional</em>) – List of desired member uuids/names</p></li>
+<li><p><strong>entity_type</strong> (<em>str</em>) – Type of entities in group
+(VirtualMachine, PhysicalMachine, etc).</p></li>
+<li><p><strong>uuid</strong> (<em>str</em><em>, </em><em>optional</em>) – UUID of group if already exists. If not provided,
+retrieval will be attempted before operations that require it.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
+</dd>
+</dl>
+<dl class="py method">
 <dt id="csv_to_static_groups.StaticGroup.add">
-<code class="descname">add</code><span class="sig-paren">(</span><em>lookup_names=False</em>, <em>case_sensitive=True</em>, <em>dryrun=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#StaticGroup.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.StaticGroup.add" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#StaticGroup.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.StaticGroup.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds the group to the Turbonomic server.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>lookup_names</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True uuids will be collected from
-the Turbonomic server that match the entity names in self.members</li>
-<li><strong>dryrun</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will not commit changes to
-the Turbonomic server</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lookup_names</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True uuids will be collected from
+the Turbonomic server that match the entity names in self.members</p></li>
+<li><p><strong>dryrun</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will not commit changes to
+the Turbonomic server</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">vmtconnect response object</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>vmtconnect response object</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="csv_to_static_groups.StaticGroup.add_entities">
-<code class="descname">add_entities</code><span class="sig-paren">(</span><em>members</em>, <em>lookup_names=False</em>, <em>case_sensitive=True</em>, <em>dryrun=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#StaticGroup.add_entities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.StaticGroup.add_entities" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_entities</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#StaticGroup.add_entities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.StaticGroup.add_entities" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds specified members to the current group membership</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>members</strong> (<em>list</em>) – List of member uuids/names to add/remove.</li>
-<li><strong>lookup_names</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True uuids will be collected from
-the Turbonomic server that match the entity names in self.members</li>
-<li><strong>case_sensitive</strong> (<em>bool</em><em>, </em><em>optional</em>) – If False and lookup_names is True,
-names will be matched without case sensitivity.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>members</strong> (<em>list</em>) – List of member uuids/names to add/remove.</p></li>
+<li><p><strong>lookup_names</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True uuids will be collected from
+the Turbonomic server that match the entity names in self.members</p></li>
+<li><p><strong>case_sensitive</strong> (<em>bool</em><em>, </em><em>optional</em>) – If False and lookup_names is True,
+names will be matched without case sensitivity.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">vmtconnect response object</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>vmtconnect response object</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="csv_to_static_groups.StaticGroup.add_or_update">
-<code class="descname">add_or_update</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#StaticGroup.add_or_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.StaticGroup.add_or_update" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_or_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#StaticGroup.add_or_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.StaticGroup.add_or_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper function to update group if it already exists or add it
 if it does not.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>dryrun</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will not commit changes to
-the Turbonomic server</li>
-<li><strong>**kwargs</strong> – Keyword arguments for self.update()</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dryrun</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will not commit changes to
+the Turbonomic server</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for self.update()</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">vmtconnect response object</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>vmtconnect response object</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="csv_to_static_groups.StaticGroup.exists">
-<code class="descname">exists</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#StaticGroup.exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.StaticGroup.exists" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">exists</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#StaticGroup.exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.StaticGroup.exists" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks if group already exists in target environment.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if group exists or False if group does not exist</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if group exists or False if group does not exist</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="csv_to_static_groups.StaticGroup.get_current_members">
-<code class="descname">get_current_members</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#StaticGroup.get_current_members"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.StaticGroup.get_current_members" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_current_members</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#StaticGroup.get_current_members"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.StaticGroup.get_current_members" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get list of member entities that currently belong to the group.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">vmtconnect response object</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>vmtconnect response object</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="csv_to_static_groups.StaticGroup.remove">
-<code class="descname">remove</code><span class="sig-paren">(</span><em>dryrun=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#StaticGroup.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.StaticGroup.remove" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">remove</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#StaticGroup.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.StaticGroup.remove" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes the group from the Turbonomic server.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dryrun</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will not commit changes to
-the Turbonomic server</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">vmtconnect response object</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dryrun</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will not commit changes to
+the Turbonomic server</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>vmtconnect response object</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="csv_to_static_groups.StaticGroup.remove_entities">
-<code class="descname">remove_entities</code><span class="sig-paren">(</span><em>members</em>, <em>lookup_names=False</em>, <em>case_sensitive=True</em>, <em>dryrun=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#StaticGroup.remove_entities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.StaticGroup.remove_entities" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">remove_entities</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#StaticGroup.remove_entities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.StaticGroup.remove_entities" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes specified members from the current group membership</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>members</strong> (<em>list</em>) – List of member uuids/names to add/remove.</li>
-<li><strong>lookup_names</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True uuids will be collected from
-the Turbonomic server that match the entity names in self.members</li>
-<li><strong>case_sensitive</strong> (<em>bool</em><em>, </em><em>optional</em>) – If False and lookup_names is True,
-names will be matched without case sensitivity.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>members</strong> (<em>list</em>) – List of member uuids/names to add/remove.</p></li>
+<li><p><strong>lookup_names</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True uuids will be collected from
+the Turbonomic server that match the entity names in self.members</p></li>
+<li><p><strong>case_sensitive</strong> (<em>bool</em><em>, </em><em>optional</em>) – If False and lookup_names is True,
+names will be matched without case sensitivity.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">vmtconnect response object</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>vmtconnect response object</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="csv_to_static_groups.StaticGroup.update">
-<code class="descname">update</code><span class="sig-paren">(</span><em>allow_add=True</em>, <em>allow_remove=True</em>, <em>lookup_names=False</em>, <em>case_sensitive=True</em>, <em>dryrun=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#StaticGroup.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.StaticGroup.update" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#StaticGroup.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.StaticGroup.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds/Removes members on the static group on the Turbonomic server.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>allow_add</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, current and new members are
-allowed to be added</li>
-<li><strong>allow_remove</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, current members are allowed
-to be removed.</li>
-<li><strong>lookup_names</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True uuids will be collected from
-the Turbonomic server that match the entity names in self.members</li>
-<li><strong>case_sensitive</strong> (<em>bool</em><em>, </em><em>optional</em>) – If False and lookup_names is True,
-names will be matched without case sensitivity.</li>
-<li><strong>dryrun</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, no changes are committed to
-the Turbonomic server</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>allow_add</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, current and new members are
+allowed to be added</p></li>
+<li><p><strong>allow_remove</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, current members are allowed
+to be removed.</p></li>
+<li><p><strong>lookup_names</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True uuids will be collected from
+the Turbonomic server that match the entity names in self.members</p></li>
+<li><p><strong>case_sensitive</strong> (<em>bool</em><em>, </em><em>optional</em>) – If False and lookup_names is True,
+names will be matched without case sensitivity.</p></li>
+<li><p><strong>dryrun</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, no changes are committed to
+the Turbonomic server</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">vmtconnect response object</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>vmtconnect response object</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <div class="section" id="exceptions">
 <h3>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h3>
-<dl class="exception">
+<dl class="py exception">
 <dt id="csv_to_static_groups.StaticGroupError">
-<em class="property">exception </em><code class="descclassname">csv_to_static_groups.</code><code class="descname">StaticGroupError</code><a class="reference internal" href="_modules/csv_to_static_groups.html#StaticGroupError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.StaticGroupError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-prename descclassname">csv_to_static_groups.</code><code class="sig-name descname">StaticGroupError</code><a class="reference internal" href="_modules/csv_to_static_groups.html#StaticGroupError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.StaticGroupError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base StaticGroup Exception.</p>
 </dd></dl>
 
-<dl class="exception">
+<dl class="py exception">
 <dt id="csv_to_static_groups.GroupAlreadyExistsError">
-<em class="property">exception </em><code class="descclassname">csv_to_static_groups.</code><code class="descname">GroupAlreadyExistsError</code><a class="reference internal" href="_modules/csv_to_static_groups.html#GroupAlreadyExistsError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.GroupAlreadyExistsError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-prename descclassname">csv_to_static_groups.</code><code class="sig-name descname">GroupAlreadyExistsError</code><a class="reference internal" href="_modules/csv_to_static_groups.html#GroupAlreadyExistsError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.GroupAlreadyExistsError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raised when attempting to add a group that already exists.</p>
 </dd></dl>
 
-<dl class="exception">
+<dl class="py exception">
 <dt id="csv_to_static_groups.MissingUUIDError">
-<em class="property">exception </em><code class="descclassname">csv_to_static_groups.</code><code class="descname">MissingUUIDError</code><a class="reference internal" href="_modules/csv_to_static_groups.html#MissingUUIDError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.MissingUUIDError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-prename descclassname">csv_to_static_groups.</code><code class="sig-name descname">MissingUUIDError</code><a class="reference internal" href="_modules/csv_to_static_groups.html#MissingUUIDError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.MissingUUIDError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base StaticGroup Missing UUID Exception.</p>
 </dd></dl>
 
-<dl class="exception">
+<dl class="py exception">
 <dt id="csv_to_static_groups.NoMatchingGroupError">
-<em class="property">exception </em><code class="descclassname">csv_to_static_groups.</code><code class="descname">NoMatchingGroupError</code><a class="reference internal" href="_modules/csv_to_static_groups.html#NoMatchingGroupError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.NoMatchingGroupError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-prename descclassname">csv_to_static_groups.</code><code class="sig-name descname">NoMatchingGroupError</code><a class="reference internal" href="_modules/csv_to_static_groups.html#NoMatchingGroupError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.NoMatchingGroupError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raised when attempting to update/remove a group that does not exist.</p>
 </dd></dl>
 
-<dl class="exception">
+<dl class="py exception">
 <dt id="csv_to_static_groups.DuplicateMatchingGroupError">
-<em class="property">exception </em><code class="descclassname">csv_to_static_groups.</code><code class="descname">DuplicateMatchingGroupError</code><a class="reference internal" href="_modules/csv_to_static_groups.html#DuplicateMatchingGroupError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.DuplicateMatchingGroupError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-prename descclassname">csv_to_static_groups.</code><code class="sig-name descname">DuplicateMatchingGroupError</code><a class="reference internal" href="_modules/csv_to_static_groups.html#DuplicateMatchingGroupError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.DuplicateMatchingGroupError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raised when attempting to update/remove a group where mutliple groups
 share the same name.</p>
 </dd></dl>
 
-<dl class="exception">
+<dl class="py exception">
 <dt id="csv_to_static_groups.LookupNameError">
-<em class="property">exception </em><code class="descclassname">csv_to_static_groups.</code><code class="descname">LookupNameError</code><a class="reference internal" href="_modules/csv_to_static_groups.html#LookupNameError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.LookupNameError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-prename descclassname">csv_to_static_groups.</code><code class="sig-name descname">LookupNameError</code><a class="reference internal" href="_modules/csv_to_static_groups.html#LookupNameError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.LookupNameError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base StaticGroup Lookup Name Exception.</p>
 </dd></dl>
 
-<dl class="exception">
+<dl class="py exception">
 <dt id="csv_to_static_groups.NameMatchError">
-<em class="property">exception </em><code class="descclassname">csv_to_static_groups.</code><code class="descname">NameMatchError</code><a class="reference internal" href="_modules/csv_to_static_groups.html#NameMatchError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.NameMatchError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-prename descclassname">csv_to_static_groups.</code><code class="sig-name descname">NameMatchError</code><a class="reference internal" href="_modules/csv_to_static_groups.html#NameMatchError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.NameMatchError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raised if an entity can’t be found by name.</p>
 </dd></dl>
 
-<dl class="exception">
+<dl class="py exception">
 <dt id="csv_to_static_groups.MultipleMatchingNamesError">
-<em class="property">exception </em><code class="descclassname">csv_to_static_groups.</code><code class="descname">MultipleMatchingNamesError</code><a class="reference internal" href="_modules/csv_to_static_groups.html#MultipleMatchingNamesError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.MultipleMatchingNamesError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-prename descclassname">csv_to_static_groups.</code><code class="sig-name descname">MultipleMatchingNamesError</code><a class="reference internal" href="_modules/csv_to_static_groups.html#MultipleMatchingNamesError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.MultipleMatchingNamesError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raised if an entity name is found more than once in the target server.</p>
 </dd></dl>
 
@@ -428,43 +400,37 @@ share the same name.</p>
 </div>
 <div class="section" id="csvgroupparser">
 <h2>CSVGroupParser<a class="headerlink" href="#csvgroupparser" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="csv_to_static_groups.CSVGroupParser">
-<em class="property">class </em><code class="descclassname">csv_to_static_groups.</code><code class="descname">CSVGroupParser</code><span class="sig-paren">(</span><em>entity_type_header</em>, <em>entity_name_header</em>, <em>group_delimiter='_'</em>, <em>group_prefix=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#CSVGroupParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.CSVGroupParser" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">csv_to_static_groups.</code><code class="sig-name descname">CSVGroupParser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">entity_type_header</span></em>, <em class="sig-param"><span class="n">entity_name_header</span></em>, <em class="sig-param"><span class="n">group_delimiter</span><span class="o">=</span><span class="default_value">'_'</span></em>, <em class="sig-param"><span class="n">group_prefix</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#CSVGroupParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.CSVGroupParser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Parses a CSV and returns groupings based on headers</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>entity_type_header</strong> (<em>str</em>) – Header for the column that contains the
-entity types.</li>
-<li><strong>entity_name_header</strong> (<em>str</em>) – Header for the column that contains the
-entity names.</li>
-<li><strong>group_delimiter</strong> (<em>str</em>) – String to separate group column values.</li>
-<li><strong>group_prefix</strong> (<em>str</em>) – String to prepend group name.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>entity_type_header</strong> (<em>str</em>) – Header for the column that contains the
+entity types.</p></li>
+<li><p><strong>entity_name_header</strong> (<em>str</em>) – Header for the column that contains the
+entity names.</p></li>
+<li><p><strong>group_delimiter</strong> (<em>str</em>) – String to separate group column values.</p></li>
+<li><p><strong>group_prefix</strong> (<em>str</em>) – String to prepend group name.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
+</dd>
+</dl>
+<dl class="py method">
 <dt id="csv_to_static_groups.CSVGroupParser.parse">
-<code class="descname">parse</code><span class="sig-paren">(</span><em>csv_file</em>, <em>group_headers=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#CSVGroupParser.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.CSVGroupParser.parse" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">parse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">csv_file</span></em>, <em class="sig-param"><span class="n">group_headers</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#CSVGroupParser.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.CSVGroupParser.parse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create unique groups from additional columns in the csv</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>csv_file</strong> (<em>str</em>) – Path to csv file</li>
-<li><strong>group_headers</strong> (<em>list</em><em>, </em><em>optional</em>) – List of headers to group from in order.
-By default all headers in the csv are used in left to right order.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>csv_file</strong> (<em>str</em>) – Path to csv file</p></li>
+<li><p><strong>group_headers</strong> (<em>list</em><em>, </em><em>optional</em>) – List of headers to group from in order.
+By default all headers in the csv are used in left to right order.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>List of dictionaries:</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>List of dictionaries:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
  <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
  <span class="s2">&quot;entity_type&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
@@ -473,25 +439,23 @@ By default all headers in the csv are used in left to right order.</li>
 </pre></div>
 </div>
 </p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <div class="section" id="id1">
 <h3>Exceptions<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<dl class="exception">
+<dl class="py exception">
 <dt id="csv_to_static_groups.CSVGroupParserError">
-<em class="property">exception </em><code class="descclassname">csv_to_static_groups.</code><code class="descname">CSVGroupParserError</code><a class="reference internal" href="_modules/csv_to_static_groups.html#CSVGroupParserError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.CSVGroupParserError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-prename descclassname">csv_to_static_groups.</code><code class="sig-name descname">CSVGroupParserError</code><a class="reference internal" href="_modules/csv_to_static_groups.html#CSVGroupParserError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.CSVGroupParserError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base CSVGroupParser Exception.</p>
 </dd></dl>
 
-<dl class="exception">
+<dl class="py exception">
 <dt id="csv_to_static_groups.MissingHeaderError">
-<em class="property">exception </em><code class="descclassname">csv_to_static_groups.</code><code class="descname">MissingHeaderError</code><a class="reference internal" href="_modules/csv_to_static_groups.html#MissingHeaderError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.MissingHeaderError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-prename descclassname">csv_to_static_groups.</code><code class="sig-name descname">MissingHeaderError</code><a class="reference internal" href="_modules/csv_to_static_groups.html#MissingHeaderError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.MissingHeaderError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raised if a specified header is missing.</p>
 </dd></dl>
 
@@ -499,58 +463,52 @@ By default all headers in the csv are used in left to right order.</li>
 </div>
 <div class="section" id="groupupdateutility">
 <h2>GroupUpdateUtility<a class="headerlink" href="#groupupdateutility" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="csv_to_static_groups.GroupUpdateUtility">
-<em class="property">class </em><code class="descclassname">csv_to_static_groups.</code><code class="descname">GroupUpdateUtility</code><span class="sig-paren">(</span><em>conn</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#GroupUpdateUtility"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.GroupUpdateUtility" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">csv_to_static_groups.</code><code class="sig-name descname">GroupUpdateUtility</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">conn</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#GroupUpdateUtility"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.GroupUpdateUtility" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Utility Object to simplify common group update tasks</p>
-<dl class="method">
+<dl class="py method">
 <dt id="csv_to_static_groups.GroupUpdateUtility.get_entity_index">
-<code class="descname">get_entity_index</code><span class="sig-paren">(</span><em>entity_types</em>, <em>key='displayName'</em>, <em>values=[]</em>, <em>case_sensitive=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#GroupUpdateUtility.get_entity_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.GroupUpdateUtility.get_entity_index" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_entity_index</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">entity_types</span></em>, <em class="sig-param"><span class="n">key</span><span class="o">=</span><span class="default_value">'displayName'</span></em>, <em class="sig-param"><span class="n">values</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">case_sensitive</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#GroupUpdateUtility.get_entity_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.GroupUpdateUtility.get_entity_index" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates an index of entities based on a group key.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>entity_types</strong> (<em>list</em>) – List of entity_types,</li>
-<li><strong>key</strong> (<em>str</em><em>, </em><em>optional</em>) – Key to index on.</li>
-<li><strong>values</strong> (<em>list</em><em>, </em><em>optional</em>) – Value keys to include in values. If empty,
-all values are included.</li>
-<li><strong>case_sensitive</strong> (<em>bool</em><em>, </em><em>optional</em>) – Group entities with/without case
-sensitivity</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>entity_types</strong> (<em>list</em>) – List of entity_types,</p></li>
+<li><p><strong>key</strong> (<em>str</em><em>, </em><em>optional</em>) – Key to index on.</p></li>
+<li><p><strong>values</strong> (<em>list</em><em>, </em><em>optional</em>) – Value keys to include in values. If empty,
+all values are included.</p></li>
+<li><p><strong>case_sensitive</strong> (<em>bool</em><em>, </em><em>optional</em>) – Group entities with/without case
+sensitivity</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>Dictionary:</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Dictionary:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;entity type&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;entity_key&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="n">values</span><span class="p">},</span> <span class="p">{</span><span class="n">values</span><span class="p">}]}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 </p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="csv_to_static_groups.GroupUpdateUtility.get_group_diff">
-<code class="descname">get_group_diff</code><span class="sig-paren">(</span><em>group_uuid</em>, <em>utd_members</em>, <em>key='uuid'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#GroupUpdateUtility.get_group_diff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.GroupUpdateUtility.get_group_diff" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_group_diff</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">group_uuid</span></em>, <em class="sig-param"><span class="n">utd_members</span></em>, <em class="sig-param"><span class="n">key</span><span class="o">=</span><span class="default_value">'uuid'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#GroupUpdateUtility.get_group_diff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.GroupUpdateUtility.get_group_diff" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates uuids to add and remove to match current group with “utd”.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>group_uuid</strong> (<em>str</em>) – Target group uuid.</li>
-<li><strong>utd_members</strong> (<em>list</em>) – List of desired up to date uuids.</li>
-<li><strong>key</strong> (<em>str</em><em>, </em><em>optional</em>) – Key to compare members by.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>group_uuid</strong> (<em>str</em>) – Target group uuid.</p></li>
+<li><p><strong>utd_members</strong> (<em>list</em>) – List of desired up to date uuids.</p></li>
+<li><p><strong>key</strong> (<em>str</em><em>, </em><em>optional</em>) – Key to compare members by.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>Dictionary:</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Dictionary:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;add&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;uuid&quot;</span><span class="p">,</span> <span class="s2">&quot;uuid&quot;</span><span class="p">],</span>
     <span class="s2">&quot;remove&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;uuid&quot;</span><span class="p">,</span> <span class="s2">&quot;uuid&quot;</span><span class="p">]</span>
@@ -558,38 +516,32 @@ sensitivity</li>
 </pre></div>
 </div>
 </p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="csv_to_static_groups.GroupUpdateUtility.get_group_index">
-<code class="descname">get_group_index</code><span class="sig-paren">(</span><em>key='displayName', values=['uuid']</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#GroupUpdateUtility.get_group_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.GroupUpdateUtility.get_group_index" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_group_index</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">key</span><span class="o">=</span><span class="default_value">'displayName'</span></em>, <em class="sig-param"><span class="n">values</span><span class="o">=</span><span class="default_value">['uuid']</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#GroupUpdateUtility.get_group_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.GroupUpdateUtility.get_group_index" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates an index of group values based on a group key.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>key</strong> (<em>str</em><em>, </em><em>optional</em>) – Key to index on,</li>
-<li><strong>values</strong> (<em>list</em><em>, </em><em>optional</em>) – Value keys to include in values. If empty,
-all values are included.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>str</em><em>, </em><em>optional</em>) – Key to index on,</p></li>
+<li><p><strong>values</strong> (<em>list</em><em>, </em><em>optional</em>) – Value keys to include in values. If empty,
+all values are included.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>Dictionary:</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Dictionary:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;groupName&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="n">values</span><span class="p">},</span> <span class="p">{</span><span class="n">values</span><span class="p">}]</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 </p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -597,40 +549,39 @@ all values are included.</li>
 </div>
 <div class="section" id="main">
 <h2>main<a class="headerlink" href="#main" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
+<dl class="py function">
 <dt id="csv_to_static_groups.main">
-<code class="descclassname">csv_to_static_groups.</code><code class="descname">main</code><span class="sig-paren">(</span><em>conn</em>, <em>csv_file</em>, <em>entity_type_header='Entity Type'</em>, <em>entity_name_header='Entity Name'</em>, <em>group_headers=[]</em>, <em>no_add=False</em>, <em>no_remove=False</em>, <em>delete=False</em>, <em>case_sensitive=True</em>, <em>group_delimiter='_'</em>, <em>dryrun=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.main" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">csv_to_static_groups.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">conn</span></em>, <em class="sig-param"><span class="n">csv_file</span></em>, <em class="sig-param"><span class="n">entity_type_header</span><span class="o">=</span><span class="default_value">'Entity Type'</span></em>, <em class="sig-param"><span class="n">entity_name_header</span><span class="o">=</span><span class="default_value">'Entity Name'</span></em>, <em class="sig-param"><span class="n">group_headers</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">no_add</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">no_remove</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">delete</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">case_sensitive</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">group_delimiter</span><span class="o">=</span><span class="default_value">'_'</span></em>, <em class="sig-param"><span class="n">dryrun</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csv_to_static_groups.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#csv_to_static_groups.main" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
-<div>Parses groups from CSV and adds/updates/deletes groups.
-Efficiently collects group and entity uuids to minimize api requests.</div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>conn</strong> (<em>VMTConnection</em>) – VMTConnection instance to target Turbonomic Server</li>
-<li><strong>csv_file</strong> (<em>str</em>) – Path to Target CSV</li>
-<li><strong>entity_type_header</strong> (<em>str</em><em>, </em><em>optional</em>) – CSV header for column that contains
-entity types.</li>
-<li><strong>entity_name_header</strong> (<em>str</em><em>, </em><em>optional</em>) – CSV header for column that contains
-entity names.</li>
-<li><strong>group_headers</strong> (<em>list</em><em>, </em><em>optional</em>) – List of CSV headers to group members by
+<div><p>Parses groups from CSV and adds/updates/deletes groups.
+Efficiently collects group and entity uuids to minimize api requests.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>conn</strong> (<em>VMTConnection</em>) – VMTConnection instance to target Turbonomic Server</p></li>
+<li><p><strong>csv_file</strong> (<em>str</em>) – Path to Target CSV</p></li>
+<li><p><strong>entity_type_header</strong> (<em>str</em><em>, </em><em>optional</em>) – CSV header for column that contains
+entity types.</p></li>
+<li><p><strong>entity_name_header</strong> (<em>str</em><em>, </em><em>optional</em>) – CSV header for column that contains
+entity names.</p></li>
+<li><p><strong>group_headers</strong> (<em>list</em><em>, </em><em>optional</em>) – List of CSV headers to group members by
 in order. If empty list, all headers except entity_type_header, and
-entity_name_header are used from left to right.</li>
-<li><strong>no_add</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, adding current entities to group is
-disabled.</li>
-<li><strong>no_remove</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, removing current entities from a
-group is disabled</li>
-<li><strong>delete</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, groups matching names from csv are
-deleted</li>
-<li><strong>case_sensitive</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, entities will be matched with
-case-sensitivity</li>
-<li><strong>dryrun</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, changes are not committed to the
-target Turbonomic server.</li>
+entity_name_header are used from left to right.</p></li>
+<li><p><strong>no_add</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, adding current entities to group is
+disabled.</p></li>
+<li><p><strong>no_remove</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, removing current entities from a
+group is disabled</p></li>
+<li><p><strong>delete</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, groups matching names from csv are
+deleted</p></li>
+<li><p><strong>case_sensitive</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, entities will be matched with
+case-sensitivity</p></li>
+<li><p><strong>dryrun</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, changes are not committed to the
+target Turbonomic server.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>Dictionary with change events and totals for each change category</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Dictionary with change events and totals for each change category</p>
 <p>e.g.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;Change Category A&quot;</span><span class="p">:</span> <span class="p">{</span>
      <span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="nb">int</span>
@@ -642,39 +593,33 @@ target Turbonomic server.</li>
 </pre></div>
 </div>
 </p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <div class="section" id="global-variables">
 <h3>Global Variables<a class="headerlink" href="#global-variables" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="logging-output">
 <h4>Logging/Output<a class="headerlink" href="#logging-output" title="Permalink to this headline">¶</a></h4>
-<dl class="docutils">
-<dt>LOGGER (logging.logger)</dt>
-<dd><ul class="first last simple">
-<li>Set to your logging.logger to include log entries</li>
-<li>Default: <code class="docutils literal notranslate"><span class="pre">None</span></code></li>
+<dl class="simple">
+<dt>LOGGER (logging.logger)</dt><dd><ul class="simple">
+<li><p>Set to your logging.logger to include log entries</p></li>
+<li><p>Default: <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
 </ul>
 </dd>
-<dt>QUIET (bool)</dt>
-<dd><ul class="first last simple">
-<li>Allows ouput to sysout</li>
-<li>Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></li>
+<dt>QUIET (bool)</dt><dd><ul class="simple">
+<li><p>Allows ouput to sysout</p></li>
+<li><p>Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p></li>
 </ul>
 </dd>
-<dt>TRACE (bool)</dt>
-<dd><ul class="first last simple">
-<li>Outputs trace to LOGGER</li>
-<li>Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></li>
+<dt>TRACE (bool)</dt><dd><ul class="simple">
+<li><p>Outputs trace to LOGGER</p></li>
+<li><p>Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p></li>
 </ul>
 </dd>
-<dt>WARN (bool):</dt>
-<dd><ul class="first last simple">
-<li>Allow warnings in sysout</li>
-<li>Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></li>
+<dt>WARN (bool):</dt><dd><ul class="simple">
+<li><p>Allow warnings in sysout</p></li>
+<li><p>Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p></li>
 </ul>
 </dd>
 </dl>
@@ -683,21 +628,21 @@ target Turbonomic server.</li>
 <h4>Summary Names<a class="headerlink" href="#summary-names" title="Permalink to this headline">¶</a></h4>
 <p>Change categories available to main’s return dictionary.</p>
 <ul class="simple">
-<li>TRK_DELETE = <code class="docutils literal notranslate"><span class="pre">&quot;Deleted&quot;</span></code></li>
-<li>TRK_ERROR = <code class="docutils literal notranslate"><span class="pre">&quot;Errors&quot;</span></code></li>
-<li>TRK_MISS_ENTITY = <code class="docutils literal notranslate"><span class="pre">&quot;Missing</span> <span class="pre">Entities&quot;</span></code></li>
-<li>TRK_ADD = <code class="docutils literal notranslate"><span class="pre">&quot;Added&quot;</span></code></li>
-<li>TRK_UPDATE = <code class="docutils literal notranslate"><span class="pre">&quot;Updated&quot;</span></code></li>
-<li>TRK_SKIP = <code class="docutils literal notranslate"><span class="pre">&quot;Skipped&quot;</span></code></li>
+<li><p>TRK_DELETE = <code class="docutils literal notranslate"><span class="pre">&quot;Deleted&quot;</span></code></p></li>
+<li><p>TRK_ERROR = <code class="docutils literal notranslate"><span class="pre">&quot;Errors&quot;</span></code></p></li>
+<li><p>TRK_MISS_ENTITY = <code class="docutils literal notranslate"><span class="pre">&quot;Missing</span> <span class="pre">Entities&quot;</span></code></p></li>
+<li><p>TRK_ADD = <code class="docutils literal notranslate"><span class="pre">&quot;Added&quot;</span></code></p></li>
+<li><p>TRK_UPDATE = <code class="docutils literal notranslate"><span class="pre">&quot;Updated&quot;</span></code></p></li>
+<li><p>TRK_SKIP = <code class="docutils literal notranslate"><span class="pre">&quot;Skipped&quot;</span></code></p></li>
 </ul>
 </div>
 <div class="section" id="groupparser-fields">
 <h4>GroupParser Fields<a class="headerlink" href="#groupparser-fields" title="Permalink to this headline">¶</a></h4>
 <p>Default CSV Headers</p>
 <ul class="simple">
-<li>ENTITY_TYPE_HEADER = <code class="docutils literal notranslate"><span class="pre">&quot;Entity</span> <span class="pre">Type&quot;</span></code></li>
-<li>ENTITY_NAME_HEADER = <code class="docutils literal notranslate"><span class="pre">&quot;Entity</span> <span class="pre">Name&quot;</span></code></li>
-<li>GROUP_DELIMITER = <code class="docutils literal notranslate"><span class="pre">&quot;_&quot;</span></code></li>
+<li><p>ENTITY_TYPE_HEADER = <code class="docutils literal notranslate"><span class="pre">&quot;Entity</span> <span class="pre">Type&quot;</span></code></p></li>
+<li><p>ENTITY_NAME_HEADER = <code class="docutils literal notranslate"><span class="pre">&quot;Entity</span> <span class="pre">Name&quot;</span></code></p></li>
+<li><p>GROUP_DELIMITER = <code class="docutils literal notranslate"><span class="pre">&quot;_&quot;</span></code></p></li>
 </ul>
 </div>
 </div>
@@ -715,7 +660,7 @@ target Turbonomic server.</li>
         <a href="exporting_groups.html" class="btn btn-neutral float-right" title="Exporting Groups to CSV" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="supported_csv_format.html" class="btn btn-neutral" title="Supported CSV Format" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="supported_csv_format.html" class="btn btn-neutral float-left" title="Supported CSV Format" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -724,11 +669,19 @@ target Turbonomic server.</li>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Austin Portal.
+        
+        &copy; Copyright 2018 Austin Portal; 2020 Turbonomic
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -740,38 +693,16 @@ target Turbonomic server.</li>
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'1.1.2',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
   <script type="text/javascript">
       jQuery(function () {
-          
-          SphinxRtdTheme.Navigation.enableSticky();
-          
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

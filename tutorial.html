@@ -1,56 +1,58 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Tutorial &mdash; csv_to_static_groups 1.1.2 documentation</title>
+  <title>Tutorial &mdash; csv_to_static_groups 1.1.3 documentation</title>
   
 
   
-  
-  
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Script Usage" href="script_usage.html" />
     <link rel="prev" title="Intallation" href="install.html" /> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
-            <a href="index.html" class="icon icon-home"> csv_to_static_groups
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> csv_to_static_groups
           
 
           
@@ -73,6 +75,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -101,6 +104,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -139,7 +143,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Tutorial</li>
     
@@ -177,31 +181,29 @@ create static groups from:</p>
 <p>We need to modify this spreadsheet to meet the supported CSV format
 requirements.</p>
 <ol class="arabic">
-<li><dl class="first docutils">
-<dt>First we need to add the two required headers.</dt>
-<dd><p class="first">We can change “VMs” to “Entity Name”</p>
+<li><dl>
+<dt>First we need to add the two required headers.</dt><dd><p>We can change “VMs” to “Entity Name”</p>
 <a class="reference internal image-reference" href="_images/tutorial_name_header.gif"><img alt="_images/tutorial_name_header.gif" src="_images/tutorial_name_header.gif" style="width: 449.6px; height: 232.0px;" /></a>
 <p>then we can add the “Entity Type” column.</p>
-<a class="last reference internal image-reference" href="_images/tutorial_type_header.gif"><img alt="_images/tutorial_type_header.gif" src="_images/tutorial_type_header.gif" style="width: 449.6px; height: 232.0px;" /></a>
+<a class="reference internal image-reference" href="_images/tutorial_type_header.gif"><img alt="_images/tutorial_type_header.gif" src="_images/tutorial_type_header.gif" style="width: 449.6px; height: 232.0px;" /></a>
 </dd>
 </dl>
 </li>
-<li><p class="first"><strong>Then save our spreadsheet as a CSV.</strong></p>
-</li>
+<li><p><strong>Then save our spreadsheet as a CSV.</strong></p></li>
 </ol>
 <p>After that, we’re done!</p>
 </div>
 <div class="section" id="running-the-script">
 <h3>2. Running the script<a class="headerlink" href="#running-the-script" title="Permalink to this headline">¶</a></h3>
 <p>We can then run <em>csv_to_static_groups</em> to create our groups.</p>
-<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ ./csv_to_static_groups.py vm_departments_owners.csv -u administrator
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./csv_to_static_groups.py vm_departments_owners.csv -u administrator
 </pre></div>
 </div>
 <p>After we have created these groups we also realize we need groups for all VM’s in
 each department without the owner!</p>
 <p>Luckily, we can use the same CSV to create these groups by adding the group_headers
 option and only specify the “Department” column:</p>
-<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ ./csv_to_static_groups.py vm_departments_owners.csv -u administrator --group_headers &quot;Department&quot;
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./csv_to_static_groups.py vm_departments_owners.csv -u administrator --group_headers <span class="s2">&quot;Department&quot;</span>
 </pre></div>
 </div>
 </div>
@@ -212,39 +214,36 @@ if entities in these static groups are accidentally added or removed.
 In other words, we need <em>csv_to_static_groups</em> to periodically check and fix
 any discrepancies.</p>
 <ol class="arabic">
-<li><dl class="first docutils">
-<dt>Automatically passing credentials</dt>
-<dd><p class="first">Since this will be running unattended, we need to automatically pass
+<li><dl>
+<dt>Automatically passing credentials</dt><dd><p>Since this will be running unattended, we need to automatically pass
 credentials to the script. <em>csv_to_static_groups</em> supports passing base64
 encoded credentials as a parameter.</p>
 <p>These can be generated with this command:</p>
-<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ echo -n &quot;username:password&quot; | base64
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">echo</span> -n <span class="s2">&quot;username:password&quot;</span> <span class="p">|</span> base64
 </pre></div>
 </div>
 <p>Which gives us this hash:</p>
-<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dXNlcm5hbWU6cGFzc3dvcmQ</span><span class="o">=</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">dXNlcm5hbWU6cGFzc3dvcmQ</span><span class="o">=</span>
 </pre></div>
 </div>
 <p>We can pass these to the script with the encoded_creds option</p>
-<div class="code bash last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">--</span><span class="n">encoded_creds</span> <span class="n">dXNlcm5hbWU6cGFzc3dvcmQ</span><span class="o">=</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>--encoded_creds <span class="nv">dXNlcm5hbWU6cGFzc3dvcmQ</span><span class="o">=</span>
 </pre></div>
 </div>
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt>Enable Logging</dt>
-<dd><p class="first">We’ll also want a way to save the logs to a file to check on any issues, so we’ll add
+<li><dl>
+<dt>Enable Logging</dt><dd><p>We’ll also want a way to save the logs to a file to check on any issues, so we’ll add
 the log option and provide a path to write the logs to.</p>
-<div class="code bash last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">--</span><span class="n">log</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">tomcat</span><span class="o">/</span><span class="n">script</span><span class="o">/</span><span class="n">control</span><span class="o">/</span><span class="n">csv_to_static_groups_log</span><span class="o">.</span><span class="n">log</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>--log /srv/tomcat/script/control/csv_to_static_groups_log.log
 </pre></div>
 </div>
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt>Creating a config file</dt>
-<dd><p class="first">We can package these options into a convenient JSON formatted
+<li><dl>
+<dt>Creating a config file</dt><dd><p>We can package these options into a convenient JSON formatted
 config file.</p>
 <p>my_group_config.json:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
@@ -255,23 +254,22 @@ config file.</p>
 </pre></div>
 </div>
 <p>We can create the first set of groups with</p>
-<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ ./csv_to_static_groups.py vm_departments_owners.csv --config my_group_config.json
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./csv_to_static_groups.py vm_departments_owners.csv --config my_group_config.json
 </pre></div>
 </div>
 <p>And the second set with:</p>
-<div class="code bash last highlight-default notranslate"><div class="highlight"><pre><span></span>$ ./csv_to_static_groups.py vm_departments_owners.csv --config my_group_config.json --group_headers &quot;Department&quot;
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./csv_to_static_groups.py vm_departments_owners.csv --config my_group_config.json --group_headers <span class="s2">&quot;Department&quot;</span>
 </pre></div>
 </div>
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt>Scheduling the script</dt>
-<dd><p class="first">We can schedule this to run in crontab to periodically check and maintain
+<li><dl>
+<dt>Scheduling the script</dt><dd><p>We can schedule this to run in crontab to periodically check and maintain
 the groups.</p>
 <p>Remember to explicitly declare all paths</p>
 <p>In this case everyday at 7am.</p>
-<div class="code bash last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">00</span> <span class="mi">07</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">./</span><span class="n">srv</span><span class="o">/</span><span class="n">tomcat</span><span class="o">/</span><span class="n">script</span><span class="o">/</span><span class="n">control</span><span class="o">/</span><span class="n">csv_to_static_groups</span><span class="o">.</span><span class="n">py</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">tomcat</span><span class="o">/</span><span class="n">script</span><span class="o">/</span><span class="n">control</span><span class="o">/</span><span class="n">vm_departments_owners</span><span class="o">.</span><span class="n">csv</span> <span class="o">--</span><span class="n">config</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">tomcat</span><span class="o">/</span><span class="n">script</span><span class="o">/</span><span class="n">control</span><span class="o">/</span><span class="n">my_group_config</span><span class="o">.</span><span class="n">json</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">00</span> <span class="m">07</span> * * * ./srv/tomcat/script/control/csv_to_static_groups.py /srv/tomcat/script/control/vm_departments_owners.csv --config /srv/tomcat/script/control/my_group_config.json
 </pre></div>
 </div>
 </dd>
@@ -293,7 +291,7 @@ the groups.</p>
         <a href="script_usage.html" class="btn btn-neutral float-right" title="Script Usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="install.html" class="btn btn-neutral" title="Intallation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="install.html" class="btn btn-neutral float-left" title="Intallation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -302,11 +300,19 @@ the groups.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Austin Portal.
+        
+        &copy; Copyright 2018 Austin Portal; 2020 Turbonomic
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -318,38 +324,16 @@ the groups.</p>
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'1.1.2',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
   <script type="text/javascript">
       jQuery(function () {
-          
-          SphinxRtdTheme.Navigation.enableSticky();
-          
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>
