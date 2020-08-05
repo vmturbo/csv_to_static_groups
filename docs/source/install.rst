@@ -14,6 +14,6 @@ Requirements
 *csv_to_static_groups* requires a supported version of Python, the requests_ module,
 and vmt-connect_ in the same directory.
 
-- CPython_ >= 3.3
-- requests_ >= 2.10.0
-- vmt-connect_ >= 2.0.0
+- CPython_ >= 3.6
+- requests_ >= 2.22.0
+- vmt-connect_ >= 3.4.0
