@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! /usr/bin/env python
 import vmtconnect as vconn
 import csv
 import argparse
@@ -237,7 +237,7 @@ class CSVGroupParser(object):
         Returns:
             List of dictionaries with CSV file headers as the keys
         """
-        with open(file_path, 'r') as csvfile:
+        with open(file_path, mode='r', encoding='utf-8-sig') as csvfile:
             reader = csv.DictReader(csvfile)
             return [row for row in reader]
 
@@ -562,7 +562,7 @@ class StaticGroup(object):
         for name in names:
             matches = self.__conn.search_by_name(name, type=self.entity_type,
                                                  case_sensitive=case_sensitive,
-                                                from_cache=True)
+                                                fetch_all=True)
             if len(matches) == 0:
                 raise NameMatchError("Unable to find uuid for {}".format(name))
             if len(matches) > 1:
@@ -781,7 +781,7 @@ def main(conn, csv_file, entity_type_header=ENTITY_TYPE_HEADER,
                 continue
             matches = conn.search_by_name(member, type=group["entity_type"],
                                           case_sensitive=case_sensitive,
-                                          from_cache=True)
+                                          fetch_all=True)
             if len(matches) == 0:
                 event = (group["name"], "Could not find {} {}".format(group["entity_type"],
                                                                       member))
