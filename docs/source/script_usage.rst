@@ -84,7 +84,7 @@ An example config file could be:
 *sample_config.json*::
 
     {
-      "enccreds":"dXNlcm5hbWU6cGFzc3dvcmQ=",
+      "encoded_creds":"dXNlcm5hbWU6cGFzc3dvcmQ=",
       "target": "some_ip",
       "case_insensitive": true,
       "quiet": true,
