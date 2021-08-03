@@ -787,7 +787,7 @@ def main(conn, csv_file, entity_type_header=ENTITY_TYPE_HEADER,
                                                                       member))
                 group_changes.track(TRK_MISS_ENTITY, event, warn=True)
             elif len(matches) > 1:
-                msg_str = ("More than one instance of"
+                msg_str = (group["name"], "More than one instance of"
                            " {} {} found".format(group["entity_type"],
                                                   member))
                 group_changes.track(TRK_MISS_ENTITY, msg_str, warn=True)
