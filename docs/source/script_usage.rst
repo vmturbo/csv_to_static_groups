@@ -66,6 +66,15 @@ Optional arguments. Text between quotations indicates user specified content.
 | ``--config "CONFIG"``                     | Path to JSON Config file with        |
 |                                           | arguments                            |
 +-------------------------------------------+--------------------------------------+
+| ``--active_only``                         | If duplicate names for an entity are |
+|                                           | found only add the active one unless |
+|                                           | multiple active entities are found   |
+|                                           |                                      |
+|                                           | **NOTE:** Intended for Distaster     |
+|                                           | Recovery senarios where an *active*  |
+|                                           | and *passive* virtual machine with   |
+|                                           | the same name exists                 |
++-------------------------------------------+--------------------------------------+
 
 :sup:`† encoded_creds can be generated with this command
 (Remember to disable console history so the credentials are not stored)`::

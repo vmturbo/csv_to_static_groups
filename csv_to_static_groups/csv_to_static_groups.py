@@ -12,7 +12,7 @@ import sys
 import json
 from functools import wraps
 
-__version__ = "1.1.5"
+__version__ = "1.1.6"
 
 ## ----------------------------------------------------
 ##   Global Variables
@@ -696,7 +696,7 @@ def _config_to_args(config, args_dict, ignore=[]):
 def main(conn, csv_file, entity_type_header=ENTITY_TYPE_HEADER,
          entity_name_header=ENTITY_NAME_HEADER, group_headers=[],
          no_add=False, no_remove=False, delete=False, case_sensitive=True,
-         group_delimiter=GROUP_DELIMITER, dryrun=False):
+         group_delimiter=GROUP_DELIMITER, dryrun=False, active_only=False):
     """
         Parses groups from CSV and adds/updates/deletes groups.
         Efficiently collects group and entity uuids to minimize api requests.
@@ -787,10 +787,28 @@ def main(conn, csv_file, entity_type_header=ENTITY_TYPE_HEADER,
                                                                       member))
                 group_changes.track(TRK_MISS_ENTITY, event, warn=True)
             elif len(matches) > 1:
-                msg_str = (group["name"], "More than one instance of"
-                           " {} {} found".format(group["entity_type"],
-                                                  member))
-                group_changes.track(TRK_MISS_ENTITY, msg_str, warn=True)
+                
+                # With Active only check if more than one result in the search is active
+                if active_only:
+                    count = 0
+                    for match in matches:
+                        if match['state'] == 'ACTIVE':
+                            count += 1
+                            j = match["uuid"]
+
+                    if count == 1:
+                        discovered_members.append(j)
+                    else:
+                        msg_str = (group["name"], "More than one Active instance of"
+                                " {} {} found".format(group["entity_type"],
+                                                        member))
+                        group_changes.track(TRK_MISS_ENTITY, msg_str, warn=True)
+                else:
+                    msg_str = (group["name"], "More than one instance of"
+                            " {} {} found".format(group["entity_type"],
+                                                    member))
+                    group_changes.track(TRK_MISS_ENTITY, msg_str, warn=True)
+
             else:
                 discovered_members.append(matches[0]["uuid"])
         # Overwrite members with uuids
@@ -900,6 +918,9 @@ if __name__ == "__main__":
 
     arg_parser.add_argument("--config", action="store", required=False,
                             help=("Path to JSON Config file with arguments"))
+    
+    arg_parser.add_argument("--active_only", action="store_true", required=False,
+                            help=("Add active VM if multiple instances of same name exists"))
 
     # Parse Arguments
     args_dict = vars(arg_parser.parse_args())
@@ -956,7 +977,8 @@ if __name__ == "__main__":
                               no_remove=args_dict["no_remove"],
                               dryrun=args_dict["dryrun"],
                               delete=args_dict["delete"],
-                              case_sensitive=not args_dict["case_insensitive"])
+                              case_sensitive=not args_dict["case_insensitive"],
+                              active_only=args_dict["active_only"] )
 
         # Log Summary
         _log_summary(change_summary, args_dict["dryrun"], ignore_total=[TRK_MISS_ENTITY])
